@@ -1,18 +1,33 @@
-##----------------------------------------------------------------------------------------------------------##
+##------------------------------------------------------------------##
 ## Main function.
-##----------------------------------------------------------------------------------------------------------##
+##------------------------------------------------------------------##
 setwd("~/Documents/Repositories/financial_case_studies/")
 source("source_file.R")
 
-us_pca <- prcomp(us_yieldCurve)
-Lt <- us_pca$x[,1]
+
+## PCA and analysis of factors
+# Select data needed, either US or UK.
+yieldCurve <- uk_quarterly
+countryData <- uk_data
+
+#Perform pca on the yield curve data.
+pca <- prcomp(yieldCurve)
+
+#Select the first principal component as the level factor.
+Lt <- pca$x[,1]
 normLt <- as.zoo((Lt - mean(Lt))/sqrt(var(Lt)))
-St <- us_pca$x[,2]
-normSt <- (St - mean(St))/sqrt(var(St))
+index(normLt) <- index(yieldCurve)
 
-usInflation <- us_data[,4]
-ukInflation <- uk_data[,4]
+#Select the second principal component as the slope factor.
+St <- pca$x[,2]
+normSt <- as.zoo(St - mean(St))/sqrt(var(St))
+index(normSt) <- index(yieldCurve)
 
-plot(-normLt/100, col="red")
-par(new=TRUE)
-plot(usInflation, col = "green")
+#Select PCE core inflation from the dataset.
+inflation <- countryData[,5] - mean(countryData[,5])
+
+#Plot the level factor against inflation.
+plot(-normLt/100, ylim = c(-0.02,0.03), col = "green")
+lines(inflation)
+##------------------------------------------------------------------##
+##------------------------------------------------------------------##
