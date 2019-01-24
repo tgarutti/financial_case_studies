@@ -28,5 +28,3 @@ Mdl = varm(size(reducedPC,2),1);
 %%
 tVals = factorVAR.AR{1}./SE.AR{1};
 pVals = 2*(1-tcdf(abs(tVals),size(reducedPC,1)-1));
-
-%%%%%%% THIS IS A COMMENT %%%%%%%%%
