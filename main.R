@@ -23,22 +23,23 @@ normSt <- as.zoo(St - mean(St))/sqrt(var(St))
 index(normSt) <- index(yieldCurve)
 
 #Select PCE core inflation from the dataset. Demean the dataset, using a different mean every x years.
-x <- 100
 inflation <- countryData[,5]
 
-for (i in 1:(floor(length(inflation)/(4*x))+1))
-{
-  s = ((i-1)*4*x+1)
-  e = i*4*x
-  if (e > length(inflation))
-  {
-    inflation[s:length(inflation)] = inflation[s:length(inflation)] - mean(inflation[s:length(inflation)])
-  }
-  else
-  {
-    inflation[s:e] = inflation[s:e] - mean(inflation[s:e])
-  }
-}
+# x <- 100
+# 
+# for (i in 1:(floor(length(inflation)/(4*x))+1))
+# {
+#   s = ((i-1)*4*x+1)
+#   e = i*4*x
+#   if (e > length(inflation))
+#   {
+#     inflation[s:length(inflation)] = inflation[s:length(inflation)] - mean(inflation[s:length(inflation)])
+#   }
+#   else
+#   {
+#     inflation[s:e] = inflation[s:e] - mean(inflation[s:e])
+#   }
+# }
 
 inflation <- inflation - mean(inflation)
 
