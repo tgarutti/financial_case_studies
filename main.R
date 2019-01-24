@@ -1,7 +1,6 @@
 ##------------------------------------------------------------------##
 ## Main function.
 ##------------------------------------------------------------------##
-setwd("~/Documents/Repositories/financial_case_studies/")
 source("source_file.R")
 
 
