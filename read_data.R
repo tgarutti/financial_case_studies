@@ -16,7 +16,6 @@ us_yieldCurve <- interpolate(united_states)[,c(1,2,4,8,10,11,12,14,17)]
 #uk_yieldCurve <- interpolate(united_kingdom)[,c(1,2,4,8,10,11,12,13,14,15,16,17)]
 uk_yieldCurve <- interpolate(united_kingdom)[,c(1,2,4,8,10,12,13,14,15,16,17)]
 
-
 us_quarterly <- as.zoo(monthlyToQuarterly(us_yieldCurve, c(1990,1)))
 colnames(us_quarterly) = colnames(us_yieldCurve)
 index(us_quarterly) = index(us_data)[62:(62+112)]
