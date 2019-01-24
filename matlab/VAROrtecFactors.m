@@ -30,6 +30,8 @@ tVals   = PCVAR.AR{1}./SE.AR{1};
 pVals   = 2*(1-tcdf(abs(tVals),size(PCOrtec,1)-1));
 statSig = zeros(10,10);
 
+% Check significance of the AR coefficients at the 99% level, 1 means
+% significant, 0 means not significant
 for i=1:10
     for j=1:10
         if pVals(i,j) >= 0.01
@@ -40,7 +42,10 @@ for i=1:10
     end
 end
 
-%% Create FAVAR(1) model of the data for inflation, output gap and unemployment
+%% Create FAVAR(1) model of the observed data w/ 10 PC (lowest AIC)
 favar = varm(3,1);
 [FAVAR,EstSE] = estimate(favar,[inflation outputGap unemployment],'X',PCOrtec);
 
+%% 
+tValsAR1   = FAVAR.AR{1} ./ EstSE.AR{1};
+pValsAR1   = 2*(1-tcdf(abs(tValsAR1),size(PCOrtec,1)+3-1));
