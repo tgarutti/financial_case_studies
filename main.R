@@ -6,9 +6,9 @@ source("source_file.R")
 
 
 ## PCA and analysis of factors
-# Select data needed, either US or UK.
-yieldCurve <- uk_quarterly
-countryData <- uk_data
+#Select data needed, either US or UK.
+yieldCurve <- us_quarterly
+countryData <- us_data
 
 #Perform pca on the yield curve data.
 pca <- prcomp(yieldCurve)

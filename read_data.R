@@ -9,7 +9,8 @@ uk_data <- read.zoo("./data/UKdata.csv", header = TRUE, sep = ",",format="%m/%d/
 
 
 #us_yieldCurve <- interpolate(united_states)[,c(1,2,4,8,10,11,12,13,14,15,16,17)]
-us_yieldCurve <- interpolate(united_states)[,c(1,2,4,8,10,12)]
+us_yieldCurve <- interpolate(united_states)[,c(1,2,4,8,10,11,12,14,17)]
+#us_yieldCurve <- interpolate(united_states)[,c(1,2,4,8,10,12)]
 
 #uk_yieldCurve <- interpolate(united_kingdom)[,c(1,2,4,8,10,11,12,13,14,15,16,17)]
 uk_yieldCurve <- interpolate(united_kingdom)[,c(1,2,4,8,10,12,13,14,15,16,17)]
