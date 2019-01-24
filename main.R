@@ -33,5 +33,7 @@ normPC1 <- as.zoo((pcOrtec[,1] - mean(pcOrtec[,1])/sqrt(var(pcOrtec[,1]))))
 plot(-normLt/100, ylim = c(-0.02,0.03), col = "green")
 lines(-normPC1/100, col = "red")
 lines(inflation)
+
+asdffahjk
 ##------------------------------------------------------------------##
 ##------------------------------------------------------------------##
