@@ -34,5 +34,20 @@ monthlyToQuarterly <- function(data1, start_date)
   })
   return(quarterly_data)
 }
+
+basic_descriptives <- function(data1)
+{
+  descriptives <- apply(data1, 2, FUN = f <- function(c)
+  {
+    c <- coredata(c)
+    avg <- mean(c)
+    std <- sqrt(var(c))
+    autocorrelations <- acf(c, lag.max = 20)$acf[c(2,3,4,11)]
+    stats <- c(avg, std, autocorrelations)
+    return(stats)
+  })
+  rownames(descriptives) <- c("Mean", "Std. Dev.", "ar1", "ar2", "ar3", "ar10")
+  return(t(descriptives))
+}
 ##------------------------------------------------------------------##
 ##------------------------------------------------------------------##
