@@ -22,7 +22,7 @@ correlations = corrcoef(fullDataSet);
 reducedPC = [PCOrtec(:,1) PCOrtec(:,3) PCOrtec(:,4) PCOrtec(:,6) PCOrtec(:,9)];
 
 %% Create VAR(1) model for Ortec's (reduced) PC components
-pcvar = varm(size(PCOrtec,2),1);
+pcvar = varm(size(PCOrtec,2),2);
 [PCVAR,SE] = estimate(pcvar,PCOrtec);
 
 %% p-values for factor VAR(1) model
