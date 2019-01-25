@@ -46,5 +46,10 @@ inflation <- inflation - mean(inflation)
 #Plot the level factor against inflation.
 plot(-normLt/100, ylim = c(-0.02,0.03), col = "green")
 lines(inflation)
+
+
+## Calculate and write descriptive statistics.
+descriptives <- basic_descriptives(us_yield_ortec)
+write_table(descriptives, "descriptivesYieldsOrtec.csv")
 ##------------------------------------------------------------------##
 ##------------------------------------------------------------------##
