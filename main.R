@@ -43,6 +43,10 @@ inflation <- countryData[,5]
 
 inflation <- inflation - mean(inflation)
 
+## Calculate and write descriptive statistics.
+descriptives <- basic_descriptives(us_yield_ortec)
+write_table(descriptives, "descriptivesYieldsOrtec.csv")
+corr<- cor(pca$x, countryData)
 #Plot the level factor against inflation.
 plot(-normLt/100, ylim = c(-0.02,0.03), col = "green")
 lines(inflation)
@@ -54,10 +58,5 @@ lines(inflation)
   model<- lm(St~inf+output_gap,data=data_St)
   plot(fitted.values(model),ylim=c(-0.05,0.05), type="l", col="blue")
  lines(St)
-
-## Calculate and write descriptive statistics.
-descriptives <- basic_descriptives(us_yield_ortec)
-write_table(descriptives, "descriptivesYieldsOrtec.csv")
-corr<- cor(pca$x, countryData)
 ##------------------------------------------------------------------##
 ##------------------------------------------------------------------##
