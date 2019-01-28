@@ -31,6 +31,8 @@ index(uk_quarterly) = index(uk_data)[1:93]
 us_data <- window(us_data, start = "1985-03-1", end = "2018-03-01")
 uk_data <- window(uk_data, start = "1995-03-1", end = "2018-03-01")
 
+pcOrtec <- window(pcOrtec, start = "1985-03-1", end = "2018-03-01")
+
 rm(united_kingdom, united_states)
 ##------------------------------------------------------------------##
 ##------------------------------------------------------------------##

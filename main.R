@@ -8,6 +8,7 @@ source("source_file.R")
 #Select data needed, either US or UK.
 yieldCurve <- us_yield_ortec
 countryData <- us_data
+normData <- normalize(countryData)
 
 #Perform pca on the yield curve data.
 pca <- prcomp(yieldCurve)
@@ -21,6 +22,11 @@ index(normLt) <- index(yieldCurve)
 St <- pca$x[,2]
 normSt <- as.zoo(St - mean(St))/sqrt(var(St))
 index(normSt) <- index(yieldCurve)
+
+#Select the second principal component as the slope factor.
+Ct <- pca$x[,3]
+normCt <- as.zoo(Ct - mean(Ct))/sqrt(var(Ct))
+index(normCt) <- index(yieldCurve)
 
 #Select PCE core inflation from the dataset. Demean the dataset, using a different mean every x years.
 inflation <- countryData[,5]
@@ -54,12 +60,15 @@ plot(-normLt/100, ylim = c(-0.02,0.03), col = "green")
 lines(inflation)
 
 #OLS regression of slope factor on inflation and output gap
-inf <- inflation  -Lt
+inf <- inflation - Lt
 output_gap <- countryData[,3]
+unemp <- countryData[,9]
+nairu <- countryData[,10]
 data_St <- data.frame(St, inf, output_gap)
-model <- lm(St ~ inf+output_gap, data = data_St)
+model1 <- lm(St ~ inf+output_gap, data = data_St)
+model2 <- lm(-normCt/100 ~ normData[,3] + normData[,9])
 
-plot(fitted.values(model),ylim=c(-0.05,0.05), type="l", col="blue")
+plot(fitted.values(model1),ylim=c(-0.05,0.05), type="l", col="blue")
 lines(St)
 ##------------------------------------------------------------------##
 ##------------------------------------------------------------------##
