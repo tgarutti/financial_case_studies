@@ -8,7 +8,7 @@ format short
 %% Load data
 filename = 'data_ortec';
 [~,dates,~]      = xlsread(filename,'Global PCA','A5:A180'); % Only from 1993 onward!!!
-[inflation,~]    = xlsread(filename,'United States','E5:E180');
+[inflation,~]    = xlsread(filename,'United States','F5:F180');
 [outputGap,~]    = xlsread(filename,'United States','D5:D180');
 [unemployment,~] = xlsread(filename,'United States','J5:J180');
 [shortRate,~]    = xlsread(filename,'United States','H5:H180');
@@ -27,9 +27,9 @@ bPost = regress(shortRate(74:end), [ones(postT,1) inflation(74:end) outputGap(74
 %ARX = estimate(arx,shortRate(1:end-1,:),'X',[inflation outputGap]);
 
 %% Backout the coefficients of the Taylor rule from both models
-gy  = bPost(3);
-gPi = bPost(2)-1;
-r   = bPost(1)+0.02*gPi;
+gy  = bFull(3);
+gPi = bFull(2)-1;
+r   = bFull(1)+0.02*gPi;
 
 %shortRatePhi = ARX.AR{1};
 %gyAR         = ARX.Beta(2);
