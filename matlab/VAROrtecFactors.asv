@@ -9,7 +9,7 @@ format short
 filename = 'data_ortec';
 [~,dates,~]      = xlsread(filename,'Global PCA','A5:A180');
 [PCOrtec,~]      = xlsread(filename,'Global PCA','B5:K180');
-[inflation,~]    = xlsread(filename,'United States','E5:E180');
+[inflation,~]    = xlsread(filename,'United States','F5:F180');
 [outputGap,~]    = xlsread(filename,'United States','D5:D180');
 [unemployment,~] = xlsread(filename,'United States','J5:J180');
 
@@ -42,12 +42,10 @@ for i=1:10
     end
 end
 
-%% Create FAVAR(1) model of the data for inflation, output gap and unemployment w
-favar = varm(3,1);
-[FAVAR,EstSE] = estimate(favar,[inflation outputGap unemployment],'X',reducedPC);
+%% Create FAVAR(1) model of the observed data w/ 10 PC (lowest AIC)
+favar = varm(3,2);
+[FAVAR,EstSE] = estimate(favar,[inflation outputGap unemployment]);
 
 %% 
 tValsAR1   = FAVAR.AR{1} ./ EstSE.AR{1};
-tValsAR2   = FAVAR.AR{2} ./ EstSE.AR{2};
 pValsAR1   = 2*(1-tcdf(abs(tValsAR1),size(PCOrtec,1)+3-1));
-pValsAR2   = 2*(1-tcdf(abs(tValsAR2),size(PCOrtec,1)+3-1));
