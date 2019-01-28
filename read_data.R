@@ -7,7 +7,7 @@ us_yieldCurve <- load("./data/united_states_fromExcel.RData")
 us_data <- read.zoo("./data/USdata.csv", header = TRUE, sep = ",",format="%m/%d/%Y",index.column = 1)
 uk_data <- read.zoo("./data/UKdata.csv", header = TRUE, sep = ",",format="%m/%d/%Y",index.column = 1)
 pcOrtec <- read.zoo("./data/PC_ortec.csv", header = TRUE, sep = ",",format="%m/%d/%Y",index.column = 1)
-us_yield_ortec <- read.zoo("./data/us_yield_ortec.csv", header = TRUE, sep = ",",format="%m/%d/%Y",index.column = 1)
+us_yield_ortec <- read.zoo("./dta/us_yield_ortec.csv", header = TRUE, sep = ",",format="%m/%d/%Y",index.column = 1)
 
 
 #us_yieldCurve <- interpolate(united_states)[,c(1,2,4,8,10,11,12,13,14,15,16,17)]

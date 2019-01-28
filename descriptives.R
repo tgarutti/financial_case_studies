@@ -52,6 +52,10 @@ write_table(corr, "corrPCYieldData_YieldsOrtec.csv")
 corr <- cor(pcOrtec, us_yield_ortec)
 write_table(corr, "corrPCOrtec_YieldsOrtec.csv")
 
+#Obtain and export correlation between US Data and principal components from the yield curve data
+corr <- cor(us_data)
+write_table(corr, "corrUSData.csv")
+
 rm(descriptives, corr)
 ##------------------------------------------------------------------##
 ##------------------------------------------------------------------##

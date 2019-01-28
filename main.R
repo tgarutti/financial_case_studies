@@ -37,7 +37,7 @@ inflation <- countryData[,5]
 inflation <- inflation - mean(inflation)
 
 ## Calculate and write descriptive statistics.
-source("descriptives.R")
+ #source("descriptives.R")
 
 ## Plots.
 source("plot.R")
