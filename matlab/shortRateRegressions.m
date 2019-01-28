@@ -24,9 +24,9 @@ ARX = estimate(arx,shortRate(1:end-1,:),'X',[inflation outputGap]);
 %% Backout the coefficients of the Taylor rule from both models
 gy  = b(3);
 gPi = b(2)-1;
-r   = b(1)-0.02*gPi;
+r   = b(1)+0.02*gPi;
 
 shortRatePhi = ARX.AR{1};
 gyAR         = ARX.Beta(2);
 gPiAR        = ARX.Beta(1)-1;
-rAR          = ARX.Constant-0.02*gPiAR;
+rAR          = ARX.Constant+0.02*gPiAR;
