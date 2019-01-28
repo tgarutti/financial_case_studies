@@ -8,7 +8,8 @@ source("source_file.R")
 #Select data needed, either US or UK.
 yieldCurve <- us_yield_ortec
 countryData <- us_data
-normData <- normalize(countryData)
+normData <- as.zoo(normalize(countryData))
+index(normData) <- index(countryData)
 normPCOrtec <- as.zoo(normalize(pcOrtec))
 index(normPCOrtec) <- index(countryData)
 
@@ -71,7 +72,7 @@ nairu <- countryData[,10]
 data_St <- data.frame(St, inf, output_gap)
 model1 <- lm(St ~ inf+output_gap, data = data_St)
 model2 <- lm(normCt/100 ~ normData[,3] + normData[,9])
-model3 <- lm(-normSt ~ normData)
+model3 <- lm(normSt ~ normData[,5] - normLt + normData[,3] + normData[,9])
 
 plot(fitted.values(model1),ylim=c(-0.05,0.05), type="l", col="blue")
 lines(St)
