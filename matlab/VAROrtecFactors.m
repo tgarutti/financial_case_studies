@@ -43,7 +43,7 @@ for i=1:10
 end
 
 %% Create FAVAR(1) model of the observed data w/ 10 PC (lowest AIC)
-favar = varm(3,1);
+favar = varm(3,2);
 [FAVAR,EstSE] = estimate(favar,[inflation outputGap unemployment],'X',PCOrtec);
 
 %% 
