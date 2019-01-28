@@ -27,9 +27,9 @@ bPost = regress(shortRate(74:end), [ones(postT,1) inflation(74:end) outputGap(74
 %ARX = estimate(arx,shortRate(1:end-1,:),'X',[inflation outputGap]);
 
 %% Backout the coefficients of the Taylor rule from both models
-gy  = b(3);
-gPi = b(2)-1;
-r   = b(1)+0.02*gPi;
+gy  = bPost(3);
+gPi = bPost(2)-1;
+r   = bPost(1)+0.02*gPi;
 
 %shortRatePhi = ARX.AR{1};
 %gyAR         = ARX.Beta(2);
