@@ -3,11 +3,12 @@
 ##------------------------------------------------------------------##
 source("source_file.R")
 
-
 ## PCA and analysis of factors
 #Select data needed, either US or UK.
 yieldCurve <- us_yield_ortec
 countryData <- us_data
+
+#Normalize data
 normData <- as.zoo(normalize(countryData))
 index(normData) <- index(countryData)
 normPCOrtec <- as.zoo(normalize(pcOrtec))

@@ -1,6 +1,8 @@
 ##------------------------------------------------------------------##
 ##Functions for reading and editing data.
 ##------------------------------------------------------------------##
+
+#Function: uses spline to interpolate the input data (length x)
 interpData <- function(data_1, x)
 {
   counter <- t(as.matrix(1:length(data_1[,1])))
@@ -12,6 +14,7 @@ interpData <- function(data_1, x)
   return(result)
 }
 
+#Function: runs interpData for a set length x and gives index and column names to the interpolated data
 interpolate <- function(data_1)
 {
   maturities <- strtoi(str_sub(colnames(data_1), 2, -1))/12
@@ -24,6 +27,7 @@ interpolate <- function(data_1)
   return(data_interp)
 }
 
+#Function: changes quarterly data to monthly data by taking the average of the 3 previous months
 monthlyToQuarterly <- function(data1, start_date)
 {
   quarterly_data <- apply(data1, 2, FUN = f <- function(d)
@@ -35,6 +39,7 @@ monthlyToQuarterly <- function(data1, start_date)
   return(quarterly_data)
 }
 
+#Function: writes table data1 from R to csv
 write_table <- function(data1, file_name)
 {
   write.csv(data1, file = file_name)

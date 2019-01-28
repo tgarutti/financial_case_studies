@@ -1,6 +1,8 @@
 ##------------------------------------------------------------------##
 ## Write descriptive statistics.
 ##------------------------------------------------------------------##
+
+#Function: calculates basic descriptive statistcs of data1
 basic_descriptives <- function(data1)
 {
   descriptives <- apply(data1, 2, FUN = f <- function(c)
