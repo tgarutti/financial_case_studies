@@ -9,6 +9,8 @@ source("source_file.R")
 yieldCurve <- us_yield_ortec
 countryData <- us_data
 normData <- normalize(countryData)
+normPCOrtec <- as.zoo(normalize(pcOrtec))
+index(normPCOrtec) <- index(countryData)
 
 #Perform pca on the yield curve data.
 pca <- prcomp(yieldCurve)
@@ -53,6 +55,8 @@ inflation <- inflation - mean(inflation)
 descriptives <- basic_descriptives(us_yield_ortec)
 write_table(descriptives, "descriptivesYieldsOrtec.csv")
 corr1 <- cor(-normalize(pca$x)/100, countryData)
+corr2 <- cor(pcOrtec, countryData)
+
 corrInflation <- cor(-normalize(pca$x)[,1]/100, inflation)
 
 #Plot the level factor against inflation.
@@ -66,7 +70,8 @@ unemp <- countryData[,9]
 nairu <- countryData[,10]
 data_St <- data.frame(St, inf, output_gap)
 model1 <- lm(St ~ inf+output_gap, data = data_St)
-model2 <- lm(-normCt/100 ~ normData[,3] + normData[,9])
+model2 <- lm(normCt/100 ~ normData[,3] + normData[,9])
+model3 <- lm(-normSt ~ normData)
 
 plot(fitted.values(model1),ylim=c(-0.05,0.05), type="l", col="blue")
 lines(St)
