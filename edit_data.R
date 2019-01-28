@@ -35,23 +35,6 @@ monthlyToQuarterly <- function(data1, start_date)
   return(quarterly_data)
 }
 
-basic_descriptives <- function(data1)
-{
-  descriptives <- apply(data1, 2, FUN = f <- function(c)
-  {
-    c <- coredata(c)
-    avg <- mean(c)
-    std <- sqrt(var(c))
-    mx <- max(c)
-    mn <- min(c)
-    autocorrelations <- acf(c, lag.max = 20)$acf[c(2,3,4,11)]
-    stats <- c(avg, std, mx, mn, autocorrelations)
-    return(stats)
-  })
-  rownames(descriptives) <- c("Mean", "Std. Dev.", "Maximum", "Minimum", "ar1", "ar2", "ar3", "ar10")
-  return(t(descriptives))
-}
-
 write_table <- function(data1, file_name)
 {
   write.csv(data1, file = file_name)

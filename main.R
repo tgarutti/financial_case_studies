@@ -33,48 +33,12 @@ index(normCt) <- index(yieldCurve)
 
 #Select PCE core inflation from the dataset. Demean the dataset, using a different mean every x years.
 inflation <- countryData[,5]
-
-# x <- 100
-# 
-# for (i in 1:(floor(length(inflation)/(4*x))+1))
-# {
-#   s = ((i-1)*4*x+1)
-#   e = i*4*x
-#   if (e > length(inflation))
-#   {
-#     inflation[s:length(inflation)] = inflation[s:length(inflation)] - mean(inflation[s:length(inflation)])
-#   }
-#   else
-#   {
-#     inflation[s:e] = inflation[s:e] - mean(inflation[s:e])
-#   }
-# }
-
 inflation <- inflation - mean(inflation)
 
 ## Calculate and write descriptive statistics.
-descriptives <- basic_descriptives(us_yield_ortec)
-write_table(descriptives, "descriptivesYieldsOrtec.csv")
-corr1 <- cor(-normalize(pca$x)/100, countryData)
-corr2 <- cor(pcOrtec, countryData)
+source("descriptives.R")
 
-corrInflation <- cor(-normalize(pca$x)[,1]/100, inflation)
-
-#Plot the level factor against inflation.
-plot(-normLt/100, ylim = c(-0.02,0.03), col = "green")
-lines(inflation)
-
-#OLS regression of slope factor on inflation and output gap
-inf <- inflation - Lt
-output_gap <- countryData[,3]
-unemp <- countryData[,9]
-nairu <- countryData[,10]
-data_St <- data.frame(St, inf, output_gap)
-model1 <- lm(St ~ inf+output_gap, data = data_St)
-model2 <- lm(normCt/100 ~ normData[,3] + normData[,9])
-model3 <- lm(normSt ~ normData[,5] - normLt + normData[,3] + normData[,9])
-
-plot(fitted.values(model1),ylim=c(-0.05,0.05), type="l", col="blue")
-lines(St)
+## Plots.
+source("plot.R")
 ##------------------------------------------------------------------##
 ##------------------------------------------------------------------##
