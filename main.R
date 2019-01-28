@@ -46,17 +46,20 @@ inflation <- inflation - mean(inflation)
 ## Calculate and write descriptive statistics.
 descriptives <- basic_descriptives(us_yield_ortec)
 write_table(descriptives, "descriptivesYieldsOrtec.csv")
-corr<- cor(pca$x, countryData)
+corr1 <- cor(-normalize(pca$x)/100, countryData)
+corrInflation <- cor(-normalize(pca$x)[,1]/100, inflation)
+
 #Plot the level factor against inflation.
 plot(-normLt/100, ylim = c(-0.02,0.03), col = "green")
 lines(inflation)
 
 #OLS regression of slope factor on inflation and output gap
-  inf<- inflation  -Lt
-  output_gap<-countryData[,3]
-  data_St = data.frame(St, inf, output_gap)
-  model<- lm(St~inf+output_gap,data=data_St)
-  plot(fitted.values(model),ylim=c(-0.05,0.05), type="l", col="blue")
- lines(St)
+inf <- inflation  -Lt
+output_gap <- countryData[,3]
+data_St <- data.frame(St, inf, output_gap)
+model <- lm(St ~ inf+output_gap, data = data_St)
+
+plot(fitted.values(model),ylim=c(-0.05,0.05), type="l", col="blue")
+lines(St)
 ##------------------------------------------------------------------##
 ##------------------------------------------------------------------##

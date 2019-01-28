@@ -56,5 +56,13 @@ write_table <- function(data1, file_name)
 {
   write.csv(data1, file = file_name)
 }
+
+normalize <- function(data1)
+{
+  norm_data <- apply(data1, 2, FUN = f <- function(c)
+  {
+    return((c - mean(c))/sqrt(var(c)))
+  })
+}
 ##------------------------------------------------------------------##
 ##------------------------------------------------------------------##
