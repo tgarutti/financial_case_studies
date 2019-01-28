@@ -2,10 +2,6 @@
 ## Plots.
 ##------------------------------------------------------------------##
 
-## Plot the level factor against inflation.
-plot(-normLt, ylim = c(-2, 3), col = "green", xlab = "", ylab = "Percent")
-lines(100*inflation)
-
 ## Plot fitted values against second (S) factor.
 #OLS regression of slope factor on inflation and output gap
 inf <- inflation - Lt
@@ -24,5 +20,9 @@ index(St) <- index(yieldCurve)
 #Create Plot
 plot(100* fit,ylim=c(-4, 4), type="l", col="blue", xlab = "", ylab = "Percent")
 lines(100*St)
+
+## Plot the level factor against inflation.
+plot(-normLt, ylim = c(-2, 3), col = "green", xlab = "", ylab = "Percent")
+lines(100*inflation)
 ##------------------------------------------------------------------##
 ##------------------------------------------------------------------##
