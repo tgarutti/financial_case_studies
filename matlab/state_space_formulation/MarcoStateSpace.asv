@@ -77,5 +77,5 @@ Pi = [0;0;0;0;0;0;0;1];
 %Y_t = C + Gamma*Y_{t-1} + Omega*epsilon_t
 [Gamma,C,Omega,~,~,~,~,eu] = gensys(Gamma0,Gamma1,c,Psi,Pi);
 
-clear aPi1 aPi2 ay br by1 by2 c Gamma0 Gamma1 gPi gy muPi muy Pi Psi rhoL rhoS rhoU
+clear aPi1 aPi2 ay br by1 by2 c Gamma0 Gamma1 gPi gy muPi muy 
 %% Run Kalman filter to evolve the state, build predicted (filtered) states
