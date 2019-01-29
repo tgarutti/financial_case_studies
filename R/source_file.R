@@ -20,5 +20,8 @@ library(rms)
 library(LSTS)
 
 source("read_data.R")
+source("Sims/gensys.R")
+source("Sims/qzdiv.R")
+source("Sims/qzswitch.R")
 ##------------------------------------------------------------------##
 ##------------------------------------------------------------------##

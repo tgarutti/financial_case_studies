@@ -1,5 +1,10 @@
 ##------------------------------------------------------------------##
-## Main function.
+## Main function
+## -------------
+## Perform principal component analysis on the US yield curve data.  
+## Compare the first principal components on the macroeconomic US 
+## data: inflation, output gap and unemployment. Displays the 
+## resulting relations in two plots.
 ##------------------------------------------------------------------##
 source("source_file.R")
 
@@ -32,12 +37,13 @@ Ct <- pca$x[,3]
 normCt <- as.zoo(Ct - mean(Ct))/sqrt(var(Ct))
 index(normCt) <- index(yieldCurve)
 
-#Select PCE core inflation from the dataset. Demean the dataset, using a different mean every x years.
+#Select PCE core inflation from the dataset. Demean the dataset,
+#using a different mean every x years.
 inflation <- countryData[,5]
 inflation <- inflation - mean(inflation)
 
 ## Calculate and write descriptive statistics.
- #source("descriptives.R")
+#source("descriptives.R")
 
 ## Plots.
 source("plot.R")
