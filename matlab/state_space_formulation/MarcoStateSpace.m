@@ -12,6 +12,9 @@ clc;
 clear;
 format short
 
+% Set global variables to be used in the Kalman filter
+global Theta1 Theta2 z
+
 %% Load data
 filename = '../../data/data_ortec';
 [~,dates,~]      = xlsread(filename,'Global PCA','A5:A180');
@@ -87,6 +90,9 @@ Pi = [Gamma(5,5),Gamma(5,6),Gamma(5,7);
       Gamma(6,5),Gamma(6,6),Gamma(6,7);
       Gamma(7,5),Gamma(7,6),Gamma(7,7)];
   
+% Next three variables are global for use in MVKalmanFilter as these
+% parameters are not to be estimated and are assumed constant (non-time
+% varying).
 Theta1 = [Gamma(5,1),Gamma(5,3);
           Gamma(6,1),Gamma(6,3);
           Gamma(7,1),Gamma(7,3)];
@@ -94,12 +100,21 @@ Theta1 = [Gamma(5,1),Gamma(5,3);
 Theta2 = [Gamma(5,2),Gamma(5,4);
           Gamma(6,2),Gamma(6,4);
           Gamma(7,2),Gamma(7,4)];
-  
+
+z = [inflation'; outputGap']; 
+
 Sigma = [Omega(5,3) Omega(5,4);
          Omega(6,3) Omega(6,4);
          Omega(7,3) Omega(7,4)];
      
 Q = Sigma*Sigma'; % Covariance matrix of the state disturbances
+
+%% Initial estimates for observation equation
+% Observation equation given as:
+% i_t = H'*xi_t + sigma*epsilon^i_t where H = [deltaL deltaS 0]'
+sigma  = std(shortRate)+(abs(normrnd(0,1))/100); % Induce some randomness
+deltaL = 1;
+deltaS = 1;
 
 %% Run Kalman filter to evolve the state, build predicted (filtered) states
 clearvars options
@@ -109,6 +124,10 @@ options = optimset(options,'MaxFunEvals',1e+6);
 options = optimset(options,'MaxIter',1e+6);
 options = optimset(options,'TolFun',1e-6);
 options = optimset(options,'TolX',1e-6);
+
+initialEstimates = [Pi(1,1),Pi(1,2),Pi(1,3),Pi(2,1),Pi(2,2),Pi(2,3),...
+    Pi(3,1),Pi(3,2),Pi(3,3),Q(1,1),Q(1,2),Q(1,3),Q(2,1),Q(2,2),Q(2,3),...
+    Q(3,1),Q(3,2),Q(3,3),deltaL,deltaS,sigma];
 
 [ML_parameters,ML_LogL] = fmincon('MVNegativeLogLikelihood',...
     initialEstimates,[],[],[],[],lb,ub,[],options,shortRate);

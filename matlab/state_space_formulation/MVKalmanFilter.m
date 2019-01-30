@@ -2,8 +2,8 @@ function [xi,P,predictedxi,predictedP] = MVKalmanFilter(parameter_vector,y)
 % This function runs the Kalman filter for a two-dimensional AR problem
 
 % Extract length of the data, and the dimensionality of the problem
-T = size(y,2);
-d = size(y,1);
+T = size(y,1);
+d = size(y,2);
 
 % Extract the stuff we need from the input arguments
 F = zeros(d,d);
