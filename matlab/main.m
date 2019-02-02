@@ -19,10 +19,17 @@ xTickLabels(1:20:numel(dates)) = dates(1:20:numel(dates));
 set(gca, 'xtick', [1:132], 'xticklabel', xTickLabels);
 
 
-%% Moving window regressions
+%% Moving window regressions -> coefficient matrix
+
 for i = 1:(n-w+1)
     window = i:(i+w-1);
 
+    % Regression of short rate
+    X_it = [Lt(window(1):window(end)) St(window(1):window(end))];
+    Y_it = 100*shortRate(window(1):window(end));
+    
+    [coefit, ~, residualit] = lsqlin(X_it, Y_it, [], []);
+    
     % Regression of Lt
     X_lt = [Lt(window(1):window(end-1)) 100*inflation(window(1):window(end-1))];
     Y_lt = Lt(window(2):window(end));
@@ -38,10 +45,10 @@ for i = 1:(n-w+1)
     coefSt = [coefSt(1), 1-coefSt(1), coefSt(2)/(1-coefSt(1)), coefSt(3)/(1-coefSt(1))];
     
     % Regression of St regression error ut
-    X_ut = residualSt(1:(end-1));
-    Y_ut = residualSt(2:end);
+    X_res = residualSt(1:(end-1));
+    Y_res = residualSt(2:end);
     
-    [coefut, ~, residualut] = lsqlin(X_ut, Y_ut, [], []);
+    [coefres, ~, residualres] = lsqlin(X_res, Y_res, [], []);
     
     % Regression of inflation
     X_pi = [Lt(window(3):window(end)) 100*inflation(window(2):window(end-1))...
@@ -60,5 +67,5 @@ for i = 1:(n-w+1)
     
     [coefy, ~, residualy] = lsqlin(X_y, Y_y, [], []);
     coefy = [coefy(1), 1-coefy(1), coefy(2)/(1-coefy(1)),...
-        coefy(3)/(1-coefy(1)), coefy(4)];
+        coefy(3)/(1-coefy(1)), coefy(4)];    
 end

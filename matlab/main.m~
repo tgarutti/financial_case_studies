@@ -19,7 +19,8 @@ xTickLabels(1:20:numel(dates)) = dates(1:20:numel(dates));
 set(gca, 'xtick', [1:132], 'xticklabel', xTickLabels);
 
 
-%% Moving window regressions
+%% Moving window regressions -> coefficient matrix
+coefficients  = z
 for i = 1:(n-w+1)
     window = i:(i+w-1);
 
@@ -53,7 +54,7 @@ for i = 1:(n-w+1)
         coefpi(3)/(1-coefpi(1)), coefpi(4)];
     
     % Regression of output gap
-    Eyt = 100*outputGap + normrnd(0,1,size(outputGap))/10;
+    Eyt = 100*outputGap + normrnd(0,1,size(outputGap));
     X_y = [Eyt(window(4):window(end)) 100*outputGap(window(2):window(end-2)) ...
         100*outputGap(window(1):window(end-3)) -St(window(2):window(end-2))];
     Y_y = 100*outputGap(window(3):window(end-1));
