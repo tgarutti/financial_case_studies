@@ -109,6 +109,26 @@ Sigma = [Omega(5,1) Omega(5,2) Omega(5,3) Omega(5,4);
      
 Q = Sigma*Sigma'; % Covariance matrix of the state disturbances
 
+% Now, check tolerance level of each Sims coefficient and officially
+% restrict to zero if less than eps
+eps = 1e-20;
+for i=1:3
+    for j=1:3
+        % Check Pi matrix
+        if Pi(i,j)<=eps
+            Pi(i,j) = 0;
+        else
+            continue;
+        end
+        % Check Q matrix
+        if Q(i,j)<=eps
+            Q(i,j) = 0;
+        else
+            continue;
+        end
+    end
+end
+            
 %% Initial estimates for observation equation
 % Observation equation given as:
 % i_t = H'*xi_t + sigma*epsilon^i_t where H = [deltaL deltaS 0]'
@@ -119,6 +139,7 @@ deltaS = 1;
 %% Run Kalman filter to evolve the state, build predicted (filtered) states
 clearvars options
 
+% Set fmincon options
 options = optimset('fmincon');
 options = optimset(options,'MaxFunEvals',1e+6);
 options = optimset(options,'MaxIter',1e+6);
@@ -129,5 +150,18 @@ initialEstimates = [Pi(1,1),Pi(1,2),Pi(1,3),Pi(2,1),Pi(2,2),Pi(2,3),...
     Pi(3,1),Pi(3,2),Pi(3,3),Q(1,1),Q(1,2),Q(1,3),Q(2,1),Q(2,2),Q(2,3),...
     Q(3,1),Q(3,2),Q(3,3),deltaL,deltaS,sigma];
 
+% Set (number of) parameter restrictions
+r = 5;
+p = 21;
+Aeq = zeros(r,p);
+beq = zeros(r,1);
+
+Aeq(1,3) = 1;
+Aeq(2,7) = 1;
+Aeq(3,8) = 1;
+Aeq(4,12) = 1;
+Aeq(5,16) = 1;
+
+% Perform Maximum Likelihood estimation
 [ML_parameters,ML_LogL] = fmincon('MVNegativeLogLikelihood',...
-    initialEstimates,[],[],[],[],[],[],[],options,shortRate);
+    initialEstimates,[],[],Aeq,beq,[],[],[],options,shortRate);
