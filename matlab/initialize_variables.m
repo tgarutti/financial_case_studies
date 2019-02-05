@@ -17,3 +17,4 @@ ML_parameters = zeros(1,21,93);
 ML_LogL = zeros(1,93);
 F = zeros(7,39,93);
 B = zeros(8,7,93);
+lastXi = zeros(93,3);
