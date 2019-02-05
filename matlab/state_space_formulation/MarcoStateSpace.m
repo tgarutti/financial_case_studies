@@ -103,9 +103,9 @@ Theta2 = [Gamma(5,2),Gamma(5,4);
 
 z = [inflation'; outputGap']; 
 
-Sigma = [Omega(5,3) Omega(5,4);
-         Omega(6,3) Omega(6,4);
-         Omega(7,3) Omega(7,4)];
+Sigma = [Omega(5,1) Omega(5,2) Omega(5,3) Omega(5,4);
+         Omega(6,1) Omega(6,2) Omega(6,3) Omega(6,4);
+         Omega(7,1) Omega(7,2) Omega(7,3) Omega(7,4)];
      
 Q = Sigma*Sigma'; % Covariance matrix of the state disturbances
 
@@ -130,4 +130,4 @@ initialEstimates = [Pi(1,1),Pi(1,2),Pi(1,3),Pi(2,1),Pi(2,2),Pi(2,3),...
     Q(3,1),Q(3,2),Q(3,3),deltaL,deltaS,sigma];
 
 [ML_parameters,ML_LogL] = fmincon('MVNegativeLogLikelihood',...
-    initialEstimates,[],[],[],[],lb,ub,[],options,shortRate);
+    initialEstimates,[],[],[],[],[],[],[],options,shortRate);

@@ -23,7 +23,7 @@ for t=3:T
     Sigma(:,:,t) = H'*predictedP(:,:,t)*H+sigma;
     mu(:,t)      = H'*predictedxi(:,t);
     LL(t)        = log(1/sqrt(det(2*pi*Sigma(:,:,t)))*...
-                exp(-1/2*(y(:,t)-mu(:,t))'*(Sigma(:,:,t)\(y(:,t)-mu(:,t)))));
+                exp(-1/2*(y(t)-mu(:,t))'*(Sigma(:,:,t)\(y(t)-mu(:,t)))));
 end
 
 % Sum over all observations
