@@ -87,10 +87,10 @@ for i = 1:(n-w+1)
      res_pi = [res_pi; residualpi];
      res_y = [res_y; residualy]; 
 
-%clear X_it X_lt X_pi X_res X_st X_y
-%clear Y_it Y_lt Y_pi Y_res Y_st Y_y
-%clear coefit coefLt coefpi coefres coefSt coefy
-%clear residualit residualLt residualpi residualres residualSt residualy
+clear X_it X_lt X_pi X_res X_st X_y
+clear Y_it Y_lt Y_pi Y_res Y_st Y_y
+clear coefit coefLt coefpi coefres coefSt coefy
+clear residualit residualLt residualpi residualres residualSt residualy
 
 
 end
