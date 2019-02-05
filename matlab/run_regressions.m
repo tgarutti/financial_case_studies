@@ -74,12 +74,5 @@ res_y = [res_y; residualy];
 
 %% Run sims algorithm
 runSims
-rho(:,:,i) = Gamma(1:7, 1:7);
-sigma(:,:,i) = Omega(1:7,:);
-
-%% Clear variables
-clear X_it X_lt X_pi X_res X_st X_y
-clear Y_it Y_lt Y_pi Y_res Y_st Y_y
-clear coefit coefLt coefpi coefres coefSt coefy
-clear residualit residualLt residualpi residualres residualSt residualy
-clear Gamma Omega
+rho(:,:,i) = gammaSims(1:7, 1:7);
+sigma(:,:,i) = omegaSims(1:7,:);
