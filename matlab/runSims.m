@@ -1,22 +1,22 @@
 %% Run the Sims (2001) algorithm to generate the state system
 % Factor dynamics (RW for now)
-rhoL = 0.989;
-rhoS = 0.026;
-rhoU = 0.975;
-gPi  = 1.253;
-gy   = 0.200;
+rhoL = coefLt(1);
+rhoS = coefSt(1);
+rhoU = coefres;
+gPi  = coefSt(3);
+gy   = coefSt(4);
 
 % Inflation dynamics
-muPi = 0.074;
-ay   = 0.014;
-aPi1 = 1.154;
-aPi2 = -0.155;
+muPi = coefpi(1);
+ay   = coefpi(5);
+aPi1 = coefpi(3);
+aPi2 = coefpi(4);
 
 % Output dynamics
-muy  = 0.009;
-br   = 0.089;
-by1  = 0.918;
-by2  = 0.078;
+muy  = coefy(1);
+br   = coefy(5);
+by1  = coefy(3);
+by2  = coefy(4);
 
 % Define the system as:
 % Gamma0*Y_t = C + Gamma1*Y_{t-1} + Psi*epsilon_t * Pi*eta_t
@@ -55,4 +55,5 @@ Pi = [0;0;0;0;0;0;0;1];
 % Y_t = C + Gamma*Y_{t-1} + Omega*epsilon_t
 [Gamma,C,Omega,~,~,~,~,eu] = gensys(Gamma0,Gamma1,c,Psi,Pi);
 
+%% Clear variables
 clear aPi1 aPi2 ay br by1 by2 c Gamma0 Gamma1 gPi gy muPi muy Pi Psi rhoL rhoS rhoU

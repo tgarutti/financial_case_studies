@@ -28,20 +28,5 @@ addpath(genpath('./functions'));
 addpath(genpath('./sims_algorithm'));
 addpath(genpath('./state_space_formulation'));
 
-%% Initiate variables 
-coefficients_shortRate = [];
-coefficients_Lt = [];
-coefficients_St = [];
-coefficients_residuals = [];
-coefficients_inflation = [];
-coefficients_outputGap = [];
-
-res_it = [];
-res_Lt = [];
-res_St = [];
-res_res = [];
-res_pi = [];
-res_y = [];
-
 %% Clear not needed variables
 clear filename
