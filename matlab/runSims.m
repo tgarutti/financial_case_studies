@@ -53,7 +53,7 @@ Pi = [0;0;0;0;0;0;0;1];
 
 % Solve the system using the Sims algorithm to yield:
 % Y_t = C + Gamma*Y_{t-1} + Omega*epsilon_t
-[Gamma,C,Omega,~,~,~,~,eu] = gensys(Gamma0,Gamma1,c,Psi,Pi);
+[gammaSims,C,omegaSims,~,~,~,~,eu] = gensys(Gamma0,Gamma1,c,Psi,Pi);
 
 %% Clear variables
 clear aPi1 aPi2 ay br by1 by2 c Gamma0 Gamma1 gPi gy muPi muy Pi Psi rhoL rhoS rhoU
