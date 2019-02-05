@@ -8,6 +8,7 @@
 % latents states L_t and S_t, as is the case in an arbitrage-free affine
 % term structure model.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % Set global variables to be used in the Kalman filter
 global Theta1 Theta2 z
 
