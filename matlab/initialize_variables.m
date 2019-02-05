@@ -15,3 +15,5 @@ rho = zeros(7,7,93);
 sigma = zeros(7,4,93);
 ML_parameters = zeros(1,21,93);
 ML_LogL = zeros(1,93);
+F = zeros(7,39,93);
+B = zeros(8,7,93);

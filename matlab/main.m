@@ -19,10 +19,9 @@ initialize_variables
 for i = 1:(n-w+1)
     window = i:(i+w-1);
     run_regressions % Runs regressions from a separate file "run_regressions.m"
-    F = 
-    macroStateSpace
+    coefficientsB % Obtains the B coefficients for the yield curve
+    %macroStateSpace % Runs the Kalman filter and performs MLE
 end
-clear w n i window
 coefficients = table(coefficients_shortRate, coefficients_Lt,...
     coefficients_St, coefficients_residuals, coefficients_inflation,...
     coefficients_outputGap);
