@@ -42,10 +42,30 @@ Sigma = [Omega(5,3) Omega(5,4);
      
 Q = Sigma*Sigma'; % Covariance matrix of the state disturbances
 
+% Now, check tolerance level of each Sims coefficient and officially
+% restrict to zero if less than eps
+eps = 1e-20;
+for k=1:3
+    for j=1:3
+        % Check Pi matrix
+        if Pi(k,j)<=eps
+            Pi(k,j) = 0;
+        else
+            continue;
+        end
+        % Check Q matrix
+        if Q(k,j)<=eps
+            Q(k,j) = 0;
+        else
+            continue;
+        end
+    end
+end
+
 %% Initial estimates for observation equation
 % Observation equation given as:
 % i_t = H'*xi_t + sigma*epsilon^i_t where H = [deltaL deltaS 0]'
-ssigma  = std(shortRate)+(abs(normrnd(0,1))/100); % Induce some randomness
+zeta   = std(shortRate)+(abs(normrnd(0,1))/100); % Induce some randomness
 deltaL = 1;
 deltaS = 1;
 
@@ -60,7 +80,7 @@ options = optimset(options,'TolX',1e-6);
 
 initialEstimates = [Pi(1,1),Pi(1,2),Pi(1,3),Pi(2,1),Pi(2,2),Pi(2,3),...
     Pi(3,1),Pi(3,2),Pi(3,3),Q(1,1),Q(1,2),Q(1,3),Q(2,1),Q(2,2),Q(2,3),...
-    Q(3,1),Q(3,2),Q(3,3),deltaL,deltaS,ssigma];
+    Q(3,1),Q(3,2),Q(3,3),deltaL,deltaS,zeta];
 
 % Set (number of) parameter restrictions
 r = 5;
