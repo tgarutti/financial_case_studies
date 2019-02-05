@@ -90,7 +90,7 @@ Pi = [Gamma(5,5),Gamma(5,6),Gamma(5,7);
       Gamma(6,5),Gamma(6,6),Gamma(6,7);
       Gamma(7,5),Gamma(7,6),Gamma(7,7)];
   
-% Next three variables are global for use in MVKalmanFilter as these
+% Next three variables are global for use in MVKalmanFilter; these
 % parameters are not to be estimated and are assumed constant (non-time
 % varying).
 Theta1 = [Gamma(5,1),Gamma(5,3);
