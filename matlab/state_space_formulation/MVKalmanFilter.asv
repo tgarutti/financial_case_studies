@@ -1,6 +1,8 @@
 function [xi,P,predictedxi,predictedP] = MVKalmanFilter(parameter_vector,y)
 % This function runs the Kalman filter for a three-dimensional AR problem
 
+
+
 % Extract length of the data, and the dimensionality of the problem
 T = size(y,1);
 d = 3; % 3 states, xi = [L_t S_t u_{S,t}]'
@@ -40,17 +42,17 @@ predictedxi = zeros(d,T);
 predictedP  = zeros(d,d,T);
 
 % The Kalman filter for the multidimensional model
-for t=3:T 
-    if t == 3
+for t=2:T
+    if t == 2
         % Initialisation
-        predictedxi(:,t)  = Pi*mu0+Theta1*z(:,t-1)+Theta2*z(:,t-2);
-        predictedP(:,:,t) = (Pi*(sigma0*Pi'))+Q;
+        predictedxi(:,t)  = Pi*mu0+Theta1*z(:,t)+Theta2;
+        predictedP(:,:,t) = (F*(sigma0*F'))+Q;
     else
         % Prediction step
-        predictedxi(:,t)  = Pi*xi(:,t-1)+Theta1*z(:,t-1)+Theta2*z(:,t-2);
-        predictedP(:,:,t) = (Pi*(P(:,:,t-1)*Pi'))+Q;
+        predictedxi(:,t)  = F*xi(:,t-1);
+        predictedP(:,:,t) = F*P(:,:,t-1)*F'+Q;
     end
-    % Updating step
+    % Update step
     xi(:,t)  = predictedxi(:,t)+predictedP(:,:,t)*...
                     ((predictedP(:,:,t)+R)\(y(:,t)-predictedxi(:,t)));
     P(:,:,t) = predictedP(:,:,t)-predictedP(:,:,t)*...
