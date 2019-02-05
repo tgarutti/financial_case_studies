@@ -28,7 +28,7 @@ for i = 1:(n-w+1)
     clear residualit residualLt residualpi residualres residualSt residualy
     clear Gamma Omega eu
 end
-%clear w n i window
+clear w n i window
 coefficients = table(coefficients_shortRate, coefficients_Lt,...
     coefficients_St, coefficients_residuals, coefficients_inflation,...
     coefficients_outputGap);
@@ -36,5 +36,5 @@ coefficients = table(coefficients_shortRate, coefficients_Lt,...
 clear res_it res_Lt res_pi res_res res_St res_y
 clear coefficients_inflation coefficients_Lt coefficients_outputGap...
     coefficients_residuals coefficients_shortRate coefficients_St
-
-%% Run the Sims algorithm
+clear Aeq beq r p options initial estimates deltaL deltaS zeta Pi Q Sigma...
+    z Theta1 Theta2 C eps j k omegaSims gammaSims
