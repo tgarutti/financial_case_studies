@@ -66,7 +66,7 @@ end
 %% Initial estimates for observation equation
 % Observation equation given as:
 % i_t = H'*xi_t + sigma*epsilon^i_t where H = [deltaL deltaS 0]'
-zeta   = std(shortRate)+(abs(normrnd(0,1))/100); % Induce some randomness
+zeta   = std(shortRate(window))+(abs(normrnd(0,1))/100); % Induce some randomness
 deltaL = 1;
 deltaS = 1;
 
@@ -96,5 +96,5 @@ Aeq(4,12) = 1;
 Aeq(5,16) = 1;
 
 % Perform Maximum Likelihood estimation
-[ML_parameters(:,:,i),ML_LogL(i)] = fmincon('MVNegativeLogLikelihood',...
-    initialEstimates,[],[],Aeq,beq,[],[],[],options,shortRate);
+[ML_parameters(i,:),ML_LogL(i)] = fmincon('MVNegativeLogLikelihood',...
+    initialEstimates,[],[],Aeq,beq,[],[],[],options,shortRate(window));
