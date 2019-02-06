@@ -15,14 +15,14 @@ St = normPCs(:,2);
 
 %% Moving window regressions and Sims algorithm
 initialize_variables
-global xi
+global predictedxi
 
 for i = 1:(n-w+1)
     window = i:(i+w-1);
     run_regressions % Runs regressions from a separate file "run_regressions.m"
     coefficientsB % Obtains the B coefficients for the yield curve
     macroStateSpace % Runs the Kalman filter and performs MLE
-    lastXi(i,:) = xi(:,end)'; % Sets end values of filtered variables
+    lastXi(i,:) = predictedxi(:,end)'; % Sets end values of filtered variables
 end
 
 coefficients = table(coefficients_shortRate, coefficients_Lt,...
