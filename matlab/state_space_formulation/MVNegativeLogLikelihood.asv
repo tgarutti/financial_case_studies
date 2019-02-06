@@ -1,7 +1,7 @@
 function [output] = MVNegativeLogLikelihood(parameter_vector,y)
 
 % Set global variable for filtered states
-global predictedxi
+global xi
 
 % Extract length of the data, and the dimensionality of the problem
 T = size(y,1);
@@ -18,7 +18,7 @@ H(3)  = parameter_vector(11);
 sigma = parameter_vector(12);
 
 % Run the Kalman filter
-[~,~,predictedxi,predictedP] = MVKalmanFilter(parameter_vector,y);
+[xi,~,predictedxi,predictedP] = MVKalmanFilter(parameter_vector,y);
 
 % Initialize arrays
 mu     = zeros(d,T);
