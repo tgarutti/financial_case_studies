@@ -12,3 +12,5 @@ for j = 2:8
     A(j,:,i) = A(j-1,:,i) + B(j-1,:,i)*(-sigma(:,:,i)*lambda(:,1))...
         + 0.5*B(j-1,:,i)*(sigma(:,:,i)*sigma(:,:,i)')*B(j-1,:,i)'+A(1,:,i);
 end
+
+clear delta lambda
