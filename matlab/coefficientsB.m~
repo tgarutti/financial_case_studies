@@ -10,5 +10,4 @@ B(1,:,i) = - delta(2:8)';
 for j = 2:8
     B(j,:,i) = B(j-1,:,i)*(rho(:,:,i) - sigma(:,:,i)*lambda(:,2:8)) + B(1,:,i);
     A(j,:,i) = A(j-1,:,i) + B(j-1,:,i)*(-sigma(:,:,i)*lambda(:,1))...
-        + 0.5*B(j-1,:,i)*(sigma(:,:,i)*sigma(:,:,i)')*B(j-1,:,i)'+A(1,:,i);
-end
+        + 0.5*B(j-1,:,i)*

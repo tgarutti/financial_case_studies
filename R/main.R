@@ -10,3 +10,4 @@ PC_norm <- normalize(PCs)
 Lt <- -PC_norm[,1]
 St <- PC_norm[,2]
 
+  
