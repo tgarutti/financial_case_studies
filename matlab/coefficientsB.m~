@@ -1,0 +1,2 @@
+%% Obtain B coefficients
+delta = regress(shortRate(window(1):window(end-1), [F(:,:,i)']);
