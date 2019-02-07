@@ -37,32 +37,12 @@ Theta2 = [Gamma(5,2),Gamma(5,4);
 de_inflation = inflation-mean(inflation);
 de_outputGap = outputGap-mean(outputGap);
 
-z = [de_inflation'; de_outputGap']; 
+z = [inflation, outputGap]'; 
 
 Sigma = [Omega(5,3),Omega(5,4);
          Omega(6,3),Omega(6,4)];
      
 R = Sigma*Sigma'; % Covariance matrix of the state disturbances
-
-% Now, check tolerance level of each Sims coefficient and officially
-% restrict to zero if less than eps
-eps = 1e-20;
-for k=1:2
-    for j=1:2
-        % Check Pi matrix
-        if Pi(k,j)<=eps
-            Pi(k,j) = 0;
-        else
-            continue;
-        end
-        % Check R matrix
-        if R(k,j)<=eps
-            R(k,j) = 0;
-        else
-            continue;
-        end
-    end
-end
 
 %% Initial estimates for observation equation
 % Observation equation given as:
@@ -94,20 +74,6 @@ J = [std(shortRate(window)),0,0;
 
 S = J*J';
 
-% Now, check tolerance level of each Sims coefficient and officially
-% restrict to zero if less than eps
-eps = 1e-20;
-for k=2:3
-    for j=2:3
-        % Check J matrix
-        if J(k,j)<=eps
-            J(k,j) = 0;
-        else
-            continue;
-        end
-    end
-end
-
 %% Run Kalman filter to evolve the state, build predicted (filtered) states
 clearvars options
 
@@ -117,18 +83,28 @@ options = optimset(options,'MaxIter',1e+6);
 options = optimset(options,'TolFun',1e-6);
 options = optimset(options,'TolX',1e-6);
 
-initialEstimates = [Pi(1,1),Pi(1,2),Pi(2,1),Pi(2,2),R(1,1),R(2,2),...
-    Q(1,1),Q(1,2),Q(2,1),Q(2,2),Q(3,1),Q(3,2),S(1,1),S(2,2),S(3,3)];
+initialEstimates = [Pi(1,1),Pi(1,2),Pi(2,1),Pi(2,2),R(1,1),R(1,2),R(2,1),R(2,2),...
+    Q(1,1),Q(1,2),Q(2,1),Q(2,2),Q(3,1),Q(3,2),S(1,1),S(2,2),S(2,3),S(3,2),S(3,3)];
 
-Aeq = [];
-beq = [];
+% Lower and upper bounds on the coefficients 
+lb = [-1,-1,-1,-1,0,-Inf,-Inf,0,-20,-20,-20,-20,-20,-20,0,0,-Inf,-Inf,0];
+ub = [1,1,1,1,Inf,Inf,Inf,Inf,20,20,20,20,20,20,Inf,Inf,Inf,Inf,Inf];
+
+% Add restrictions on the covariances of the states and observations
+r = 2;
+p = length(initialEstimates);
+Aeq = zeros(r,p);
+beq = zeros(r,1);
+
+Aeq(1,6:7) = 1;   % Restriction on R
+Aeq(2,17:18) = 1; % Restriction on S
 
 % De-mean the short-rate so no constant is needed in the filter
 de_shortRate = shortRate-mean(shortRate);
 
 % Collect all observations into x-vector
-x = [de_shortRate(window), de_inflation(window), de_outputGap(window)]';
+y = [de_shortRate(window), de_inflation(window), de_outputGap(window)]';
 
 % Perform Maximum Likelihood estimation
 [ML_parameters(i,:),ML_LogL(i)] = fmincon('MVNegativeLogLikelihood',...
-    initialEstimates,[],[],Aeq,beq,[],[],[],options,x);
+    initialEstimates,[],[],Aeq,beq,lb,ub,[],options,y);
