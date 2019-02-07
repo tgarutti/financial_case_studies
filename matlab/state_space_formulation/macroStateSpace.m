@@ -96,8 +96,10 @@ p = length(initialEstimates);
 Aeq = zeros(r,p);
 beq = zeros(r,1);
 
-Aeq(1,6:7) = 1;   % Restriction on R
-Aeq(2,17:18) = 1; % Restriction on S
+Aeq(1,6) = 1;
+Aeq(1,7) = -1;
+Aeq(2,17) = 1;
+Aeq(2,18) = -1;
 
 % De-mean the short-rate so no constant is needed in the filter
 de_shortRate = shortRate-mean(shortRate);

@@ -7,6 +7,7 @@ normPCs = normalize(PCs);
 %% Define regression window and variables
 w = 132; % Window length of 10 years
 n = length(inflation);
+u = n-w+1; % Number of filters
 Lt = normPCs(:,1);
 St = normPCs(:,2);
 
@@ -17,9 +18,9 @@ St = normPCs(:,2);
 initialize_variables
 global predictedxi
 
-for i = 1:(n-w+1)
+for i = 1:u
     window = i:(i+w-1);
-    run_regressions % Runs regressions from a separate file "run_regressions.m"
+    run_regressions % Runs regressions
     coefficientsB   % Obtains the B coefficients for the yield curve
     macroStateSpace % Runs the Kalman filter and performs MLE
     lastXi(i,:) = predictedxi(:,end)'; % Sets end values of filtered variables

@@ -1,7 +1,7 @@
 function [output] = MVNegativeLogLikelihood(parameter_vector,y)
 
 % Call global variables
-global H1 H2 z
+global H1 H2 predictedxi z
 
 % Extract length of the data, and the dimensionality of the problem
 T = size(y,2);
