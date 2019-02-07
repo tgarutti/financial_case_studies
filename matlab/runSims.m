@@ -3,8 +3,8 @@
 rhoL = coefLt(1);
 rhoS = coefSt(1);
 rhoU = coefres;
-gPi  = coefSt(3);
-gy   = coefSt(4);
+gPi  = coefSt(4);
+gy   = coefSt(3);
 
 % Inflation dynamics
 muPi = coefpi(1);
@@ -24,7 +24,7 @@ Gamma0 = [1,0,0,0,-muPi,0,0,0;
           0,1,0,0,0,0,0,0;
           0,0,1,0,0,0,0,-muy;
           0,0,0,1,0,0,0,0;
-          rhoL,0,0,0,1,0,0,0;
+          rhoL-1,0,0,0,1,0,0,0;
           (rhoS-1)*gPi,0,(rhoS-1)*gy,0,(1-rhoS)*gPi,1,-1,0;
           0,0,0,0,0,0,1,0;
           0,0,1,0,0,0,0,0];
