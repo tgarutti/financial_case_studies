@@ -82,6 +82,7 @@ deltaS = 1;
 % Initialize inflation and output gap dependencies on latent states
 Q      = zeros(3,2);
 Q(1,:) = [deltaL,deltaS];
+Q(2,:)
 
 %% Run Kalman filter to evolve the state, build predicted (filtered) states
 clearvars options
