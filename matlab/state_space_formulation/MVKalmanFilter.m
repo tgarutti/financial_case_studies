@@ -4,7 +4,7 @@ function [xi,P,predictedxi,predictedP] = MVKalmanFilter(parameter_vector,y)
 global Theta1 Theta2 H1 H2 z
 
 % Extract length of the data, and the dimensionality of the problem
-T = size(y,1);
+T = size(y,2);
 d = 2; % 2 states, xi_t = [L_t S_t]'
 l = 3; % 3 observations, x_t = [i_t pi_t y_t]'
 

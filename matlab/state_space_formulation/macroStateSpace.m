@@ -126,7 +126,9 @@ beq = [];
 % De-mean the short-rate so no constant is needed in the filter
 de_shortRate = shortRate-mean(shortRate);
 
+% Collect all observations into x-vector
+x = [de_shortRate(window), de_inflation(window), de_outputGap(window)]';
+
 % Perform Maximum Likelihood estimation
 [ML_parameters(i,:),ML_LogL(i)] = fmincon('MVNegativeLogLikelihood',...
-    initialEstimates,[],[],Aeq,beq,[],[],[],options,...
-    [de_shortRate(window) de_inflation de_outputGap]);
+    initialEstimates,[],[],Aeq,beq,[],[],[],options,x);

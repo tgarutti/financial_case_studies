@@ -36,6 +36,7 @@ Theta2 = [Gamma(5,2),Gamma(5,4);
 % De-mean the data, so we don't need constants in the filter
 de_inflation = inflation-mean(inflation);
 de_outputGap = outputGap-mean(outputGap);
+
 z = [de_inflation'; de_outputGap']; 
 
 Sigma = [Omega(5,3),Omega(5,4);
@@ -117,15 +118,17 @@ options = optimset(options,'TolFun',1e-6);
 options = optimset(options,'TolX',1e-6);
 
 initialEstimates = [Pi(1,1),Pi(1,2),Pi(2,1),Pi(2,2),R(1,1),R(2,2),...
-    Q(1,1),Q(1,2),Q(2,1),Q(2,2),Q(3,1),Q(3,2),...
-    Q(3,1),Q(3,2),Q(3,3),deltaL,deltaS,zeta];
+    Q(1,1),Q(1,2),Q(2,1),Q(2,2),Q(3,1),Q(3,2),S(1,1),S(2,2),S(3,3)];
 
 Aeq = [];
 beq = [];
 
-% De-mean the short-rate
+% De-mean the short-rate so no constant is needed in the filter
 de_shortRate = shortRate-mean(shortRate);
+
+
 
 % Perform Maximum Likelihood estimation
 [ML_parameters(i,:),ML_LogL(i)] = fmincon('MVNegativeLogLikelihood',...
-    initialEstimates,[],[],Aeq,beq,[],[],[],options,de_shortRate(window));
+    initialEstimates,[],[],Aeq,beq,[],[],[],options,...
+    [de_shortRate(window)'; de_inflation(window)'; de_outputGap(window)]);

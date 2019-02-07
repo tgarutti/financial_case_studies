@@ -4,7 +4,7 @@ function [output] = MVNegativeLogLikelihood(parameter_vector,y)
 global predictedxi H1 H2 z
 
 % Extract length of the data, and the dimensionality of the problem
-T = size(y,1);
+T = size(y,2);
 d = 2; % 2 states, xi_t = [L_t S_t]'
 l = 3; % 3 observations, x_t = [i_t pi_t y_t]'
 
@@ -27,8 +27,8 @@ S(3,3) = parameter_vector(15);
 [~,~,predictedxi,predictedP] = MVKalmanFilter(parameter_vector,y);
 
 % Initialize arrays
-mu     = zeros(d,T);
-Sigma  = zeros(d,d,T);
+mu     = zeros(l,T);
+Sigma  = zeros(l,l,T);
 LL     = zeros(1,T);
 
 % Collect a row vector of log likelihood per observation
