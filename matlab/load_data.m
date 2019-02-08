@@ -20,6 +20,11 @@ filename = 'yieldCurveOrtec';
 [interpYields,~]    = xlsread(filename,'Interpolated Data','B5:K136');
 [PCs,~]    = xlsread(filename,'Principal Components','B2:i133');
 
+% De-mean data so no constants are needed in Kalman filter
+de_shortRate = shortRate-mean(shortRate);
+de_inflation = inflation-mean(inflation);
+de_outputGap = outputGap-mean(outputGap);
+
 %% CD to working directory
 pad = '../matlab/';
 cd(pad);

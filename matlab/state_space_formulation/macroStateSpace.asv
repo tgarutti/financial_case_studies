@@ -87,8 +87,8 @@ initialEstimates = [Pi(1,1),Pi(1,2),Pi(2,1),Pi(2,2),R(1,1),R(1,2),R(2,1),R(2,2),
     Q(1,1),Q(1,2),Q(2,1),Q(2,2),Q(3,1),Q(3,2),S(1,1),S(2,2),S(2,3),S(3,2),S(3,3)];
 
 % Lower and upper bounds on the coefficients 
-lb = [-1,-1,-1,-1,0,-Inf,-Inf,0,-20,-20,-20,-20,-20,-20,0,0,-Inf,-Inf,0];
-ub = [1,1,1,1,Inf,Inf,Inf,Inf,20,20,20,20,20,20,Inf,Inf,Inf,Inf,Inf];
+lb = [-1,-1,-1,-1,0,-Inf,-Inf,0,-20,-20,-20,-20,0,0,-20,-20,0];
+ub = [1,1,1,1,10,10,10,10,20,20,20,20,20,20,20,20,20];
 
 % Add restrictions on the covariances of the states and observations
 r = 2;
@@ -96,8 +96,10 @@ p = length(initialEstimates);
 Aeq = zeros(r,p);
 beq = zeros(r,1);
 
-Aeq(1,6:7) = 1;
-Aeq(2,
+Aeq(1,6) = 1;
+Aeq(1,7) = -1;
+Aeq(2,15) = 1;
+Aeq(2,16) = -1;
 
 % De-mean the short-rate so no constant is needed in the filter
 de_shortRate = shortRate-mean(shortRate);
@@ -107,4 +109,4 @@ y = [de_shortRate(window), de_inflation(window), de_outputGap(window)]';
 
 % Perform Maximum Likelihood estimation
 [ML_parameters(i,:),ML_LogL(i)] = fmincon('MVNegativeLogLikelihood',...
-    initialEstimates,[],[],[],[],lb,ub,[],options,y);
+    initialEstimates,[],[],Aeq,beq,lb,ub,[],options,y);

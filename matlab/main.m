@@ -8,6 +8,7 @@ normPCs = normalize(PCs);
 w = 132; % Window length of 10 years
 n = length(inflation);
 u = n-w+1; % Number of filters
+q = 19; % Number of parameters for Kalman ML estimation
 Lt = normPCs(:,1);
 St = normPCs(:,2);
 

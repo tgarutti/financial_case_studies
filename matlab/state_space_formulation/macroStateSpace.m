@@ -33,11 +33,7 @@ Theta1 = [Gamma(5,1),Gamma(5,3);
 Theta2 = [Gamma(5,2),Gamma(5,4);
           Gamma(6,2),Gamma(6,4)];
 
-% De-mean the data, so we don't need constants in the filter
-de_inflation = inflation-mean(inflation);
-de_outputGap = outputGap-mean(outputGap);
-
-z = [inflation, outputGap]'; 
+z = [de_inflation(window), de_outputGap(window)]'; 
 
 Sigma = [Omega(5,3),Omega(5,4);
          Omega(6,3),Omega(6,4)];
@@ -52,8 +48,8 @@ R = Sigma*Sigma'; % Covariance matrix of the state disturbances
 
 % Initialize inflation and output gap dependencies on latent states and
 % lags of inflation/output gap
-deltaL = 1;
-deltaS = 1;
+deltaL = 0.5;
+deltaS = 0.5;
 
 Q = [deltaL,deltaS;
      Gamma(1,5),Gamma(1,6);
@@ -87,8 +83,8 @@ initialEstimates = [Pi(1,1),Pi(1,2),Pi(2,1),Pi(2,2),R(1,1),R(1,2),R(2,1),R(2,2),
     Q(1,1),Q(1,2),Q(2,1),Q(2,2),Q(3,1),Q(3,2),S(1,1),S(2,2),S(2,3),S(3,2),S(3,3)];
 
 % Lower and upper bounds on the coefficients 
-lb = [-1,-1,-1,-1,0,-Inf,-Inf,0,-20,-20,-20,-20,-20,-20,0,0,-Inf,-Inf,0];
-ub = [1,1,1,1,Inf,Inf,Inf,Inf,20,20,20,20,20,20,Inf,Inf,Inf,Inf,Inf];
+lb = [-1,-1,-1,-1,0,-Inf,-Inf,0,-Inf,-Inf,-Inf,-Inf,-Inf,-Inf,0,0,-Inf,-Inf,0];
+ub = [1,1,1,1,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf];
 
 % Add restrictions on the covariances of the states and observations
 r = 2;
@@ -100,9 +96,6 @@ Aeq(1,6) = 1;
 Aeq(1,7) = -1;
 Aeq(2,17) = 1;
 Aeq(2,18) = -1;
-
-% De-mean the short-rate so no constant is needed in the filter
-de_shortRate = shortRate-mean(shortRate);
 
 % Collect all observations into x-vector
 y = [de_shortRate(window), de_inflation(window), de_outputGap(window)]';
