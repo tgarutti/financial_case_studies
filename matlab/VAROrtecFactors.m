@@ -44,11 +44,8 @@ end
 
 %% Create FAVAR(1) model of the observed data w/ 10 PC (lowest AIC)
 favar = varm(3,2);
-<<<<<<< Updated upstream
 [FAVAR,EstSE] = estimate(favar,[inflation outputGap unemployment],'X',PCOrtec);
-=======
 [FAVAR,EstSE] = estimate(favar,[inflation outputGap unemployment]);
->>>>>>> Stashed changes
 
 %% 
 tValsAR1   = FAVAR.AR{1} ./ EstSE.AR{1};

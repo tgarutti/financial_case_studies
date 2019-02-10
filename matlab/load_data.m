@@ -8,6 +8,7 @@ format short
 %% Load data (1985-03 to 2017-12)
 filename = 'data_ortec';
 [~,dates,~]      = xlsread(filename,'Global PCA','A46:A177');
+[PCOrtec,~]      = xlsread(filename,'Global PCA','B46:K177');
 [inflation,~]    = xlsread(filename,'United States','F46:F177');
 [outputGap,~]    = xlsread(filename,'United States','D46:D177');
 [unemployment,~] = xlsread(filename,'United States','J46:J177');
