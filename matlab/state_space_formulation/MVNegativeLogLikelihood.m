@@ -34,7 +34,7 @@ covar  = zeros(l,l,T);
 LL     = zeros(1,T);
 
 % Collect a row vector of log likelihood per observation
-for t=4:T
+for t=3:T
     covar(:,:,t) = Q*(predictedP(:,:,t)*Q')+S;
     mu(:,t)      = Q*predictedxi(:,t)+H1*z(:,t-1)+H2*z(:,t-2);
     LL(t)        = log(1/sqrt(det(2*pi*covar(:,:,t)))*...
@@ -42,6 +42,6 @@ for t=4:T
 end
 
 % Sum over all observations
-output = -sum(LL(4:end));               
+output = -sum(LL(3:end));               
 
 end
