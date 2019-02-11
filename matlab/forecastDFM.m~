@@ -5,15 +5,12 @@ for i = 1:u
     
     Xw = X(window,:);
     PCw = PCOrtec(window,:);
-    
     var = varm(size(PCw,2),lags);
-    [PCFit,~,~,~] = estimate(var, PCw);
-    [PCforecasts,~] = forecast(PCFit, k, PCw);
-    
+    [factorFit,~,~,~] = estimate(var, PCw);
+    [f,~] = forecast(dfmFit, k, Xw, 'X', PCw);
     favar = varm(size(X,2),lags);
     [dfmFit,~,~,~] = estimate(favar, Xw, 'X', PCw);
-    [f,~] = forecast(dfmFit, k, Xw, 'X', PCforecasts);
-    
+    [f,~] = forecast(dfmFit, k, Xw, 'X', PCw);
     b = regress(shortRate(window), [ones(length(window),1) Xw]);
     gy  = b(3);
     gPi = b(2)-1;
@@ -26,7 +23,7 @@ for i = 1:u
     end
 end
 
-clear Xw PCw favar f b gy gPi r i j window
+clear Xw PCw favar estFit f b gy gPi r i j window
 
 %% Forecast evaluation
 for i = 1:k
