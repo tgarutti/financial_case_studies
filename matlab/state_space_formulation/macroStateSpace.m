@@ -1,12 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % The variables below are found using regressions using in-sample data.
 % These provide an "initial state" for the Kalman filter to begin ML
-% estimation. First, the linear rational expectations system needs to be
-% defined, and the Sims algorithm solves this system using QZ
-% decomposition. A subset of the result is then used as the state
-% transition equation, with the observation equation being dependent on the
-% latents states L_t and S_t, as is the case in an arbitrage-free affine
-% term structure model.
+% estimation. First, the linear rational expectations system needs to be 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -19,7 +14,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Observation equation given as:
 % x_t = Q*xi_t + H1*z_{t-1} + H2*z_{t-2} + J*w_t, where x_t = [shortRate_t
-% inflation_t outputGap_t]' and w_t = [epsilon^i_t epsilon_{pi,t}
+% inflation_t outputGap_t]' and w_t = [epsilon_{i,t} epsilon_{pi,t}
 % epsilon_{y,t}]', which has variance I_3
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -58,7 +53,7 @@ J(1,1) = std(shortRate(window));
 J(2,2) = simsCheck(Omega(1,1),e);
 J(2,3) = simsCheck(Omega(1,2),e);
 J(3,2) = simsCheck(Omega(3,1),e);
-J(3,3) = simsCheck(Omega(3,3),e);
+J(3,3) = simsCheck(Omega(3,2),e);
 
 S = J*J'; % Covariance matrix of the observations
 
@@ -68,8 +63,8 @@ Q(1,1) = deltaL;
 Q(1,2) = deltaS;
 Q(2,1) = simsCheck(Gamma(1,5),e);
 Q(2,2) = simsCheck(Gamma(1,6),e);
-Q(2,1) = simsCheck(Gamma(3,5),e);
-Q(2,1) = simsCheck(Gamma(3,6),e);
+Q(3,1) = simsCheck(Gamma(3,5),e);
+Q(3,2) = simsCheck(Gamma(3,6),e);
 
 % Below are global for use in MVKalmanFilter and MVNegativeLogLikelihood;
 % these parameters are not to be estimated and are assumed constant across
@@ -103,8 +98,8 @@ initialEstimates = [Pi(1,1),Pi(1,2),Pi(2,1),Pi(2,2),R(1,1),R(1,2),R(2,1),R(2,2),
     Q(1,1),Q(1,2),Q(2,1),Q(2,2),Q(3,1),Q(3,2),S(1,1),S(2,2),S(2,3),S(3,2),S(3,3)];
 
 % Lower and upper bounds on the coefficients 
-lb = [-1,-1,-1,-1,0,-Inf,-Inf,0,-Inf,-Inf,-Inf,-Inf,-Inf,-Inf,0,0,-Inf,-Inf,0];
-ub = [1,1,1,1,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf];
+lb = [-1,-1,-1,-1,0,-10,-10,0,-10,-10,-10,-10,-10,-10,0,0,-10,-10,0];
+ub = [1,1,1,1,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10];
 
 % Add restrictions on the covariances of the states and observations
 r = 2;
@@ -118,8 +113,8 @@ Aeq(2,17) = 1;
 Aeq(2,18) = -1;
 
 % Collect all observations into x-vector
-y = [de_shortRate(window), de_inflation(window), de_outputGap(window)]';
+x = [de_shortRate(window), de_inflation(window), de_outputGap(window)]';
 
 % Perform Maximum Likelihood estimation
 [ML_parameters(i,:),ML_LogL(i)] = fmincon('MVNegativeLogLikelihood',...
-    initialEstimates,[],[],Aeq,beq,lb,ub,[],options,y);
+    initialEstimates,[],[],Aeq,beq,lb,ub,[],options,x);
