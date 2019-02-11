@@ -6,7 +6,7 @@ normPCs = normalize(PCs);
 %% Initialize variables for model comparison
 k = 16; % k-step ahead forecast
 w = 80; % Window length
-lags = 2;
+lags = 1;
 RMSE = zeros(4, k, 2);
 MAE = zeros(4, k, 2);
 eval = zeros(4, k, 2);
@@ -16,6 +16,8 @@ model = 1;
 n = length(inflation);
 u = n-w+1; % Number of filters
 X = [inflation outputGap];
+macroSpec1 = [NaN NaN; NaN NaN];
+macroSpec2 = diag(nan(2,1));
 
 %% Forecast the dynamic factor model
 forecastDFM
@@ -25,6 +27,8 @@ model = 2;
 n = length(inflation);
 u = n-w+1; % Number of filters
 X = [inflation outputGap unemployment];
+macroSpec1 = [NaN NaN 0; NaN NaN NaN; 0 0 NaN];
+macroSpec2 = diag(nan(3,1));
 
 %% Forecast the dynamic factor model
 forecastDFM
