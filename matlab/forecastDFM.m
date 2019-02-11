@@ -7,10 +7,13 @@ for i = 1:u
     PCw = PCOrtec(window,:);
     
     var = varm(size(PCw,2),lags);
+    var = varm('AR',{diag(nan(size(PCw,2),1))});
+    
     [PCFit,~,~,~] = estimate(var, PCw);
     [PCforecasts,~] = forecast(PCFit, k, PCw);
     
-    favar = varm(size(X,2),lags);
+    
+    favar = varm('AR', {macroSpec1});
     [dfmFit,~,~,~] = estimate(favar, Xw, 'X', PCw);
     [f,~] = forecast(dfmFit, k, Xw, 'X', PCforecasts);
     
