@@ -36,7 +36,7 @@ LL     = zeros(1,T);
 % Collect a row vector of log likelihood per observation
 for t=4:T
     covar(:,:,t) = Q*(predictedP(:,:,t)*Q')+S;
-    mu(:,t)      = Q*predictedxi(:,t)-H1*z(:,t-1)-H2*z(:,t-2);
+    mu(:,t)      = Q*predictedxi(:,t)+H1*z(:,t-1)+H2*z(:,t-2);
     LL(t)        = log(1/sqrt(det(2*pi*covar(:,:,t)))*...
                 exp(-1/2*(y(:,t)-mu(:,t))'*(covar(:,:,t)\(y(:,t)-mu(:,t)))));
 end

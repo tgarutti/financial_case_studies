@@ -65,7 +65,7 @@ for t=4:T
     % Updating step
     xi(:,t)  = predictedxi(:,t)+kalmanGain(:,:,t)*...
         (y(:,t)-Q*predictedxi(:,t)-H1*z(:,t-2)-H2*z(:,t-3));
-    P(:,:,t) = predictedP(:,:,t)-kalmanGain(:,:,t)*Q*predictedP(:,:,t);
+    P(:,:,t) = (eye(d)-kalmanGain(:,:,t)*Q)*predictedP(:,:,t);
     % Close the loop over time
 end
 % Close the function

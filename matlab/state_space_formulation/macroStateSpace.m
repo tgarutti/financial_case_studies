@@ -31,8 +31,8 @@ Pi = [Gamma(5,5),Gamma(5,6);
 
 % Initialize inflation and output gap dependencies on latent states and
 % lags of inflation/output gap
-deltaL = 0.8;
-deltaS = 0.8;
+deltaL = 1;
+deltaS = 1;
 
 % As Sims may yield unwanted zeros for various windows, perform a check
 % that assigns a uniform random number to the initial estimate if it is
@@ -66,7 +66,7 @@ Q(2,2) = simsCheck(Gamma(1,6),e);
 Q(3,1) = simsCheck(Gamma(3,5),e);
 Q(3,2) = simsCheck(Gamma(3,6),e);
 
-% Below are global for use in MVKalmanFilter and MVNegativeLogLikelihood;
+% Below are for global use in MVKalmanFilter and MVNegativeLogLikelihood;
 % these parameters are not to be estimated and are assumed constant across
 % the estimation window
 Theta1 = [Gamma(5,1),Gamma(5,3);
