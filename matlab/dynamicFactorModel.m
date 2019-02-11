@@ -32,7 +32,7 @@ macroSpec2 = diag(nan(3,1));
 
 %% Forecast the dynamic factor model
 forecastDFM
-
+clear PCFit f_w f dfmFit i var
 %% Compare models
 eval(:,:,1) = MAE(:,:,2)./MAE(:,:,1);
 eval(:,:,2) = RMSE(:,:,2)./RMSE(:,:,1);
