@@ -27,15 +27,13 @@ R(2,2) = parameter_vector(8);
 Q(1,1) = parameter_vector(9);
 Q(1,2) = parameter_vector(10);
 Q(2,1) = parameter_vector(11);
-Q(2,2) = parameter_vector(12);
-Q(3,1) = parameter_vector(13);
-Q(3,2) = parameter_vector(14);
+Q(3,2) = parameter_vector(12);
 
-S(1,1) = parameter_vector(15);
-S(2,2) = parameter_vector(16);
-S(2,3) = parameter_vector(17);
-S(3,2) = parameter_vector(18);
-S(3,3) = parameter_vector(19);
+S(1,1) = parameter_vector(13);
+S(2,2) = parameter_vector(14);
+S(2,3) = parameter_vector(15);
+S(3,2) = parameter_vector(16);
+S(3,3) = parameter_vector(17);
 
 % Diffuse initialisation
 mu0    = zeros(d,1);

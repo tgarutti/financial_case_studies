@@ -95,11 +95,11 @@ options = optimset(options,'TolFun',1e-6);
 options = optimset(options,'TolX',1e-6);
 
 initialEstimates = [Pi(1,1),Pi(1,2),Pi(2,1),Pi(2,2),R(1,1),R(1,2),R(2,1),R(2,2),...
-    Q(1,1),Q(1,2),Q(2,1),Q(2,2),Q(3,1),Q(3,2),S(1,1),S(2,2),S(2,3),S(3,2),S(3,3)];
+    Q(1,1),Q(1,2),Q(2,1),Q(3,2),S(1,1),S(2,2),S(2,3),S(3,2),S(3,3)];
 
 % Lower and upper bounds on the coefficients 
-lb = [-1,-1,-1,-1,0,-10,-10,0,-10,-10,-10,-10,-10,-10,0,0,-10,-10,0];
-ub = [1,1,1,1,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10];
+lb = [-1,-1,-1,-1,0,-10,-10,0,-10,-10,-10,-10,0,0,-10,-10,0];
+ub = [1,1,1,1,10,10,10,10,10,10,10,10,10,10,10,10,10];
 
 % Add restrictions on the covariances of the states and observations
 r = 2;
@@ -109,8 +109,8 @@ beq = zeros(r,1);
 
 Aeq(1,6) = 1;
 Aeq(1,7) = -1;
-Aeq(2,17) = 1;
-Aeq(2,18) = -1;
+Aeq(2,15) = 1;
+Aeq(2,16) = -1;
 
 % Collect all observations into x-vector
 x = [de_shortRate(window), de_inflation(window), de_outputGap(window)]';
