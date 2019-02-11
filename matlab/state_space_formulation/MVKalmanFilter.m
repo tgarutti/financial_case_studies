@@ -49,14 +49,14 @@ predictedP  = zeros(d,d,T);
 kalmanGain  = zeros(d,l,T);
 
 % The Kalman filter for the multidimensional model
-for t=4:T
-    if t == 4
+for t=3:T
+    if t==3
         % Initialisation
-        predictedxi(:,t)  = Pi*mu0+Theta1*z(:,t-2)+Theta2*z(:,t-3);
+        predictedxi(:,t)  = Pi*mu0+Theta1*z(:,t-1)+Theta2*z(:,t-2);
         predictedP(:,:,t) = Pi*sigma0*Pi'+R;
     else
         % Prediction step
-        predictedxi(:,t)  = Pi*xi(:,t-1)+Theta1*z(:,t-2)+Theta2*z(:,t-3);
+        predictedxi(:,t)  = Pi*xi(:,t-1)+Theta1*z(:,t-1)+Theta2*z(:,t-2);
         predictedP(:,:,t) = Pi*P(:,:,t-1)*Pi'+R;
     end
     % Compute Kalman gain
@@ -64,7 +64,7 @@ for t=4:T
     
     % Updating step
     xi(:,t)  = predictedxi(:,t)+kalmanGain(:,:,t)*...
-        (y(:,t)-Q*predictedxi(:,t)-H1*z(:,t-2)-H2*z(:,t-3));
+        (y(:,t)-Q*predictedxi(:,t)-H1*z(:,t-1)-H2*z(:,t-2));
     P(:,:,t) = (eye(d)-kalmanGain(:,:,t)*Q)*predictedP(:,:,t);
     % Close the loop over time
 end
