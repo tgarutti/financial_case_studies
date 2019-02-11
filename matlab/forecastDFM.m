@@ -5,7 +5,7 @@ for i = 1:u
     
     Xw = X(window,:);
     PCw = PCOrtec(window,:);
-    favar = varm(size(X,2),1);
+    favar = varm(size(X,2),lags);
     [estFit,~,~,~] = estimate(favar, Xw, 'X', PCw);
     [f,~] = forecast(estFit, k, Xw, 'X', PCw);
     b = regress(shortRate(window), [ones(length(window),1) Xw]);
