@@ -19,3 +19,6 @@ F = zeros(7,w-1,u);
 B = zeros(8,7,u);
 A = zeros(8,1,u);
 lastXi = zeros(u,2);
+forecastErrors = zeros(3,16,u);
+stateSpaceForecastMAE = zeros(3,16);
+stateSpaceForecastRMSE = zeros(3,16);

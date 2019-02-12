@@ -30,8 +30,8 @@ for i = 1:u
 end
 
 for s=1:16
-    stateSpaceForecastMAE(:,s) = mean(abs(forecastErrors(:,s,1:end-s)),3);
-    stateSpaceForecastRMSE(:,s) = sqrt(mean(forecastErrors(:,s,1:end-s).^2,3));
+    stateSpaceForecastMAE(:,s) = mean(abs(forecastErrors(:,s,:)),3);
+    stateSpaceForecastMAE(:,s) = mean(abs(forecastErrors(:,s,:)),3);
 end
 
 coefficients = table(coefficients_shortRate, coefficients_Lt,...
