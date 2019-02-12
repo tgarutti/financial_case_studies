@@ -18,8 +18,8 @@
 % epsilon_{y,t}]', which has variance I_3
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Set global variables to be used in the Kalman filter
-global Theta1 Theta2 H1 H2 z
+% Set global variable to be used in the Kalman filter
+global z
 
 %% Define variables
 Gamma = rho(:,:,i);
@@ -62,13 +62,8 @@ Q = zeros(3,2);
 Q(1,1) = deltaL;
 Q(1,2) = deltaS;
 Q(2,1) = simsCheck(Gamma(1,5),e);
-Q(2,2) = simsCheck(Gamma(1,6),e);
-Q(3,1) = simsCheck(Gamma(3,5),e);
 Q(3,2) = simsCheck(Gamma(3,6),e);
 
-% Below are for global use in MVKalmanFilter and MVNegativeLogLikelihood;
-% these parameters are not to be estimated and are assumed constant across
-% the estimation window
 Theta1 = [Gamma(5,1),Gamma(5,3);
           Gamma(6,1),Gamma(6,3)];
 
@@ -77,11 +72,11 @@ Theta2 = [Gamma(5,2),Gamma(5,4);
 
 H1 = [0,0;
       Gamma(1,1),Gamma(1,3);
-      Gamma(3,1),Gamma(3,3)];
+      0,Gamma(3,3)];
 
 H2 = [0,0;
-      Gamma(1,2),Gamma(1,4);
-      Gamma(3,2),Gamma(3,4)];
+      Gamma(1,2),0;
+      0,Gamma(3,4)];
   
 z = [de_inflation(window), de_outputGap(window)]'; 
 
@@ -95,11 +90,16 @@ options = optimset(options,'TolFun',1e-6);
 options = optimset(options,'TolX',1e-6);
 
 initialEstimates = [Pi(1,1),Pi(1,2),Pi(2,1),Pi(2,2),R(1,1),R(1,2),R(2,1),R(2,2),...
-    Q(1,1),Q(1,2),Q(2,1),Q(3,2),S(1,1),S(2,2),S(2,3),S(3,2),S(3,3)];
+    Q(1,1),Q(1,2),Q(2,1),Q(3,2),S(1,1),S(2,2),S(2,3),S(3,2),S(3,3),...
+    Theta1(1,1),Theta1(1,2),Theta1(2,1),Theta1(2,2),...
+    Theta2(1,1),Theta2(1,2),Theta2(2,1),Theta2(2,2),...
+    H1(2,1),H1(2,2),H1(3,2),H2(2,1),H2(3,2)];
 
 % Lower and upper bounds on the coefficients 
-lb = [-1,-1,-1,-1,0,-10,-10,0,-10,-10,-10,-10,0,0,-10,-10,0];
-ub = [1,1,1,1,10,10,10,10,10,10,10,10,10,10,10,10,10];
+lb = [-1,-1,-1,-1,0,-10,-10,0,-10,-10,-10,-10,0,0,-10,-10,0,-10,-10,-10,-10,...
+    -10,-10,-10,-10,-10,-10,-10,-10,-10];
+ub = [1,1,1,1,10,10,10,10,10,10,10,10,10,10,10,10,10,...
+    10,10,10,10,10,10,10,10,10,10,10,10,10];
 
 % Add restrictions on the covariances of the states and observations
 r = 2;

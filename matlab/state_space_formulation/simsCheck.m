@@ -2,7 +2,7 @@ function [target] = simsCheck(sims,tolerance)
 % Function that checks the Sims output
 
 if sims<=tolerance
-    target = rand;
+    target = rand/10;
 else
     target = sims;
 end

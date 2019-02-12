@@ -1,7 +1,7 @@
 function [xi,P,predictedxi,predictedP] = MVKalmanFilter(parameter_vector,y)
 
 % Call global variables
-global Theta1 Theta2 H1 H2 z
+global z
 
 % Extract length of the data, and the dimensionality of the problem
 T = size(y,2);
@@ -13,6 +13,10 @@ Pi = zeros(d,d);
 R  = zeros(d,d);
 S  = zeros(l,l);
 Q  = zeros(l,d);
+Theta1 = zeros(d,d);
+Theta2 = zeros(d,d);
+H1 = zeros(l,d);
+H2 = zeros(l,d);
 
 Pi(1,1) = parameter_vector(1);
 Pi(1,2) = parameter_vector(2);
@@ -34,6 +38,23 @@ S(2,2) = parameter_vector(14);
 S(2,3) = parameter_vector(15);
 S(3,2) = parameter_vector(16);
 S(3,3) = parameter_vector(17);
+
+Theta1(1,1) = parameter_vector(18);
+Theta1(1,2) = parameter_vector(19);
+Theta1(2,1) = parameter_vector(20);
+Theta1(2,2) = parameter_vector(21);
+
+Theta2(1,1) = parameter_vector(22);
+Theta2(1,2) = parameter_vector(23);
+Theta2(2,1) = parameter_vector(24);
+Theta2(2,2) = parameter_vector(25);
+
+H1(2,1) = parameter_vector(26);
+H1(2,2) = parameter_vector(27);
+H1(3,2) = parameter_vector(28);
+
+H2(2,1) = parameter_vector(29);
+H2(3,2) = parameter_vector(30);
 
 % Diffuse initialisation
 mu0    = zeros(d,1);

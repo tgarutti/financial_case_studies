@@ -1,7 +1,7 @@
 function [output] = MVNegativeLogLikelihood(parameter_vector,y)
 
 % Call global variables
-global H1 H2 predictedxi z
+global predictedxi z
 
 % Extract length of the data, and the dimensionality of the problem
 T = size(y,2);
@@ -14,6 +14,8 @@ d = 2; % 2 states, xi_t = [L_t S_t]'
 % Extract what is needed from parameter_vector
 S  = zeros(l,l);
 Q  = zeros(l,d);
+H1 = zeros(l,d);
+H2 = zeros(l,d);
 
 Q(1,1) = parameter_vector(9);
 Q(1,2) = parameter_vector(10);
@@ -25,6 +27,13 @@ S(2,2) = parameter_vector(14);
 S(2,3) = parameter_vector(15);
 S(3,2) = parameter_vector(16);
 S(3,3) = parameter_vector(17);
+
+H1(2,1) = parameter_vector(26);
+H1(2,2) = parameter_vector(27);
+H1(3,2) = parameter_vector(28);
+
+H2(2,1) = parameter_vector(29);
+H2(3,2) = parameter_vector(30);
 
 % Initialize arrays
 mu     = zeros(l,T);
