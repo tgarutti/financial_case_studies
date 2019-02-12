@@ -19,7 +19,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Set global variable to be used in the Kalman filter
-global z
+global predictedxi z
 
 %% Define variables
 Gamma = rho(:,:,i);
@@ -118,3 +118,37 @@ x = [de_shortRate(window), de_inflation(window), de_outputGap(window)]';
 % Perform Maximum Likelihood estimation
 [ML_parameters(i,:),ML_LogL(i)] = fmincon('MVNegativeLogLikelihood',...
     initialEstimates,[],[],Aeq,beq,lb,ub,[],options,x);
+
+%% Forecast unobserved and observed variables
+% Set the number of steps ahead one would like to forecast
+forecastHorizon = 16;
+
+% Gather the full data set to evaluate forecasts
+actualX = [de_shortRate, de_inflation, de_outputGap]';
+
+forecastedXi = zeros(2,forecastHorizon);
+forecastedX  = zeros(3,forecastHorizon);
+forecastErr  = zeros(3,forecastHorizon);
+
+% Build the s-step ahead forecasts
+for s=1:forecastHorizon
+    if s==1
+        forecastedXi(:,s) = predictedxi(:,end);
+        forecastedX(:,s)  = forecastX(predictedxi(:,end),[],...
+                                ML_parameters(i,:),(i+w-1),s,actualX);
+    else
+        forecastedXi(:,s) = forecastXi(forecastedXi(:,s-1),...
+                                forecastedX,ML_parameters(i,:),(i+w-1),s,actualX);
+        forecastedX(:,s)  = forecastX(forecastedXi(:,s),...
+                                forecastedX,ML_parameters(i,:),(i+w-1),s,actualX);
+    end
+    
+    % Calculate forecast error
+    if (i+w-1+s)<=length(actualX)
+        forecastErr(:,s) = forecastedX(:,s)-actualX(:,i+w-1+s);
+    else
+        continue;
+    end
+end
+
+forecastErrors(:,:,i) = forecastErr;
