@@ -28,12 +28,12 @@ S(2,3) = parameter_vector(15);
 S(3,2) = parameter_vector(16);
 S(3,3) = parameter_vector(17);
 
-H1(2,1) = parameter_vector(26);
-H1(2,2) = parameter_vector(27);
-H1(3,2) = parameter_vector(28);
+H1(2,1) = parameter_vector(18);
+H1(2,2) = parameter_vector(19);
+H1(3,2) = parameter_vector(20);
 
-H2(2,1) = parameter_vector(29);
-H2(3,2) = parameter_vector(30);
+H2(2,1) = parameter_vector(21);
+H2(3,2) = parameter_vector(22);
 
 % Initialize arrays
 mu     = zeros(l,T);

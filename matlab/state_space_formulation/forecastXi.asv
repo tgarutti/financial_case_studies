@@ -14,7 +14,7 @@ Pi(1,2) = parameter_vector(2);
 Pi(2,1) = parameter_vector(3);
 Pi(2,2) = parameter_vector(4);
 
-fXi = Pi*xi_T;
+fXi = Pi*xi_T
 %Theta1(1,1) = parameter_vector(18);
 %Theta1(1,2) = parameter_vector(19);
 %Theta1(2,1) = parameter_vector(20);
