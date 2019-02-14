@@ -5,11 +5,10 @@ load_data
 normPCs = normalize(PCs);
 
 %% Define regression window and variables
-w = 80; % Window length of 10 years
+w = 100; % Window length of 10 years
 n = length(inflation);
 u = n-w+1; % Number of filters
-q = 22; % Number of parameters for Kalman ML estimation
-%m = 0; % Counter for Kalman filter
+q = 23; % Number of parameters for Kalman ML estimation
 Lt = normPCs(:,1);
 St = normPCs(:,2);
 
@@ -18,20 +17,17 @@ St = normPCs(:,2);
 
 %% Moving window regressions and Sims algorithm
 initialize_variables
-global predictedxi
 
 for i = 1:u
-    %m = m+1;
     window = i:(i+w-1);
     run_regressions % Runs regressions
     coefficientsB   % Obtains the B coefficients for the yield curve
     macroStateSpace % Runs the Kalman filter and performs MLE
-    lastXi(i,:) = predictedxi(:,end)'; % Sets end values of filtered variables
 end
 
 for s=1:16
-    stateSpaceForecastMAE(:,s) = mean(abs(forecastErrors(:,s,1:end-s)),3);
-    stateSpaceForecastRMSE(:,s) = sqrt(mean(forecastErrors(:,s,1:end-s).^2,3));
+    stateSpaceForecastMAE(:,s) = mean(abs(forecastErrors(:,s,1:end-s-1)),3);
+    stateSpaceForecastRMSE(:,s) = sqrt(mean(forecastErrors(:,s,1:end-s-1).^2,3));
 end
 
 coefficients = table(coefficients_shortRate, coefficients_Lt,...

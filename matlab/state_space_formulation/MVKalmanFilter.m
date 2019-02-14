@@ -17,6 +17,7 @@ Theta1 = zeros(d,d);
 Theta2 = zeros(d,d);
 H1 = zeros(l,d);
 H2 = zeros(l,d);
+c = zeros(l,1);
 
 Pi(1,1) = parameter_vector(1);
 Pi(1,2) = parameter_vector(2);
@@ -56,6 +57,10 @@ H1(3,2) = parameter_vector(20);
 H2(2,1) = parameter_vector(21);
 H2(3,2) = parameter_vector(22);
 
+c(1) = parameter_vector(23);
+%c(2) = parameter_vector(24);
+%c(3) = parameter_vector(25);
+
 % Diffuse initialisation
 mu0    = zeros(d,1);
 sigma0 = (10^6)*eye(d);
@@ -71,11 +76,11 @@ kalmanGain  = zeros(d,l,T);
 for t=3:T
     if t==3
         % Initialisation
-        predictedxi(:,t)  = Pi*mu0+Theta1*z(:,t-1)+Theta2*z(:,t-2);
+        predictedxi(:,t)  = Pi*mu0;
         predictedP(:,:,t) = Pi*sigma0*Pi'+R;
     else
         % Prediction step
-        predictedxi(:,t)  = Pi*xi(:,t-1)+Theta1*z(:,t-1)+Theta2*z(:,t-2);
+        predictedxi(:,t)  = Pi*xi(:,t-1);
         predictedP(:,:,t) = Pi*P(:,:,t-1)*Pi'+R;
     end
     % Compute Kalman gain
@@ -83,7 +88,7 @@ for t=3:T
     
     % Updating step
     xi(:,t)  = predictedxi(:,t)+kalmanGain(:,:,t)*...
-        (y(:,t)-Q*predictedxi(:,t)-H1*z(:,t-1)-H2*z(:,t-2));
+        (y(:,t)-c-Q*predictedxi(:,t)-H1*z(:,t-1)-H2*z(:,t-2));
     P(:,:,t) = (eye(d)-kalmanGain(:,:,t)*Q)*predictedP(:,:,t);
     % Close the loop over time
 end

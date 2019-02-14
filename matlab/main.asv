@@ -8,7 +8,7 @@ normPCs = normalize(PCs);
 w = 100; % Window length of 10 years
 n = length(inflation);
 u = n-w+1; % Number of filters
-q = 30; % Number of parameters for Kalman ML estimation
+q = 25; % Number of parameters for Kalman ML estimation
 %m = 0; % Counter for Kalman filter
 Lt = normPCs(:,1);
 St = normPCs(:,2);
@@ -30,8 +30,8 @@ for i = 1:u
 end
 
 for s=1:16
-    stateSpaceForecastMAE(:,s) = mean(abs(forecastErrors(:,s,:)),3);
-    stateSpaceForecastMAE(:,s) = mean(abs(forecastErrors(:,s,:)),3);
+    stateSpaceForecastMAE(:,s) = mean(abs(forecastErrors(:,s,1:end-s-1)),3);
+    stateSpaceForecastRMSE(:,s) = sqrt(mean(forecastErrors(:,s,1:end-s-1).^2,3));
 end
 
 coefficients = table(coefficients_shortRate, coefficients_Lt,...

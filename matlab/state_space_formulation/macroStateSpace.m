@@ -19,7 +19,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Set global variable to be used in the Kalman filter
-global predictedxi z
+global z
 
 %% Define variables
 Gamma = rho(:,:,i);
@@ -31,8 +31,8 @@ Pi = [Gamma(5,5),Gamma(5,6);
 
 % Initialize inflation and output gap dependencies on latent states and
 % lags of inflation/output gap
-deltaL = 1;
-deltaS = 1;
+deltaL = 0;
+deltaS = 0;
 
 % As Sims may yield unwanted zeros for various windows, perform a check
 % that assigns a uniform random number to the initial estimate if it is
@@ -78,7 +78,9 @@ H2 = [0,0;
       Gamma(1,2),0;
       0,Gamma(3,4)];
   
-z = [inflation(window), outputGap(window)]'; 
+z = [inflation(window), outputGap(window)]';
+
+c = [0,0,0]';
 
 %% Run Kalman filter to evolve the state, build predicted (filtered) states
 clearvars options
@@ -94,11 +96,11 @@ options = optimset(options,'TolX',1e-6);
 
 initialEstimates = [Pi(1,1),Pi(1,2),Pi(2,1),Pi(2,2),R(1,1),R(1,2),R(2,1),R(2,2),...
     Q(1,1),Q(1,2),Q(2,1),Q(3,2),S(1,1),S(2,2),S(2,3),S(3,2),S(3,3),...
-    H1(2,1),H1(2,2),H1(3,2),H2(2,1),H2(3,2)];
+    H1(2,1),H1(2,2),H1(3,2),H2(2,1),H2(3,2),c(1)];
 
 % Lower and upper bounds on the coefficients 
-lb = [-1,-1,-1,-1,0,-10,-10,0,-10,-10,-10,-10,0,0,-10,-10,0,-1,-1,-1,-1,-1];
-ub = [1,1,1,1,10,10,10,10,10,10,10,10,10,10,10,10,10,1,1,1,1,1];
+lb = [-1,-1,-1,-1,0,-Inf,-Inf,0,-Inf,-Inf,-Inf,-Inf,0,0,-Inf,-Inf,0,-1,-1,-1,-1,-1,-Inf];
+ub = [1,1,1,1,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,1,1,1,1,1,Inf];
 
 % Add restrictions on the covariances of the states and observations
 r = 2;
@@ -118,36 +120,5 @@ x = [shortRate(window), inflation(window), outputGap(window)]';
 [ML_parameters(i,:),ML_LogL(i)] = fmincon('MVNegativeLogLikelihood',...
     initialEstimates,[],[],Aeq,beq,lb,ub,[],options,x);
 
-%% Forecast unobserved and observed variables
-% Set the number of steps ahead one would like to forecast
-forecastHorizon = 16;
-
-% Gather the full data set to evaluate forecasts
-actualX = [shortRate, inflation,  outputGap]';
-
-forecastedXi = zeros(2,forecastHorizon);
-forecastedX  = zeros(3,forecastHorizon);
-forecastErr  = zeros(3,forecastHorizon);
-
-% Build the s-step ahead forecasts
-for s=1:forecastHorizon
-    if s==1
-        forecastedXi(:,s) = predictedxi(:,end);
-        forecastedX(:,s)  = forecastX(predictedxi(:,end),[],...
-                                ML_parameters(i,:),(i+w-1),s,actualX);
-    else
-        forecastedXi(:,s) = forecastXi(forecastedXi(:,s-1),...
-                                forecastedX,ML_parameters(i,:),(i+w-1),s,actualX);
-        forecastedX(:,s)  = forecastX(forecastedXi(:,s),...
-                                forecastedX,ML_parameters(i,:),(i+w-1),s,actualX);
-    end
-    
-    % Calculate forecast error
-    if (i+w-1+s)<=length(actualX)
-        forecastErr(:,s) = forecastedX(:,s)-actualX(:,i+w-1+s);
-    else
-        continue;
-    end
-end
-
-forecastErrors(:,:,i) = forecastErr;
+%% Forecasting
+forecastSSM;
