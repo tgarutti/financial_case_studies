@@ -37,8 +37,8 @@ H2(2,1) = parameter_vector(21);
 H2(3,2) = parameter_vector(22);
 
 c(1) = parameter_vector(23);
-%c(2) = parameter_vector(24);
-%c(3) = parameter_vector(25);
+c(2) = parameter_vector(24);
+c(3) = parameter_vector(25);
 
 % Initialize arrays
 mu     = zeros(l,T);

@@ -22,7 +22,6 @@ filename = 'yieldCurveOrtec';
 [PCs,~]    = xlsread(filename,'Principal Components','B2:i133');
 
 %% Scale data
-PCs = PCs/100;
 
 % De-mean data so no constants are needed in Kalman filter
 de_shortRate = shortRate-mean(shortRate);

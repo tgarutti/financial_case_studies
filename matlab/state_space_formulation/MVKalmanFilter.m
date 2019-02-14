@@ -40,16 +40,6 @@ S(2,3) = parameter_vector(15);
 S(3,2) = parameter_vector(16);
 S(3,3) = parameter_vector(17);
 
-%Theta1(1,1) = parameter_vector(18);
-%Theta1(1,2) = parameter_vector(19);
-%Theta1(2,1) = parameter_vector(20);
-%Theta1(2,2) = parameter_vector(21);
-
-%Theta2(1,1) = parameter_vector(22);
-%Theta2(1,2) = parameter_vector(23);
-%Theta2(2,1) = parameter_vector(24);
-%Theta2(2,2) = parameter_vector(25);
-
 H1(2,1) = parameter_vector(18);
 H1(2,2) = parameter_vector(19);
 H1(3,2) = parameter_vector(20);
@@ -58,8 +48,18 @@ H2(2,1) = parameter_vector(21);
 H2(3,2) = parameter_vector(22);
 
 c(1) = parameter_vector(23);
-%c(2) = parameter_vector(24);
-%c(3) = parameter_vector(25);
+c(2) = parameter_vector(24);
+c(3) = parameter_vector(25);
+
+Theta1(1,1) = parameter_vector(26);
+Theta1(1,2) = parameter_vector(27);
+Theta1(2,1) = parameter_vector(28);
+Theta1(2,2) = parameter_vector(29);
+
+Theta2(1,1) = parameter_vector(30);
+Theta2(1,2) = parameter_vector(31);
+Theta2(2,1) = parameter_vector(32);
+Theta2(2,2) = parameter_vector(33);
 
 % Diffuse initialisation
 mu0    = zeros(d,1);
@@ -76,11 +76,11 @@ kalmanGain  = zeros(d,l,T);
 for t=3:T
     if t==3
         % Initialisation
-        predictedxi(:,t)  = Pi*mu0;
+        predictedxi(:,t)  = Pi*mu0+Theta1*z(:,t-1)+Theta2*z(:,t-2);
         predictedP(:,:,t) = Pi*sigma0*Pi'+R;
     else
         % Prediction step
-        predictedxi(:,t)  = Pi*xi(:,t-1);
+        predictedxi(:,t)  = Pi*xi(:,t-1)+Theta1*z(:,t-1)+Theta2*z(:,t-2);
         predictedP(:,:,t) = Pi*P(:,:,t-1)*Pi'+R;
     end
     % Compute Kalman gain
