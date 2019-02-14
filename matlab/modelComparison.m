@@ -66,5 +66,5 @@ copmarisonMAE = zeros(3, k, m);
 copmarisonRMSE = zeros(3, k, m);
 for i=1:m
     copmarisonMAE(:,:,i) = MAE(:,:,i)./MAE(:,:,1);
-    copmarisonRMSE(:,:,i)x` = RMSE(:,:,i)./RMSE(:,:,1);
+    copmarisonRMSE(:,:,i) = RMSE(:,:,i)./RMSE(:,:,1);
 end
