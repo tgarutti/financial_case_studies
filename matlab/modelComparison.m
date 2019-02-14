@@ -16,7 +16,7 @@ forecasts = zeros(u, 3, k, m);
 MAE = zeros(3, k, m);
 RMSE = zeros(3, k, m);
 
-%% Model specification: Strictly statistical (factor) model
+%% Model specification 1: Strictly statistical (factor) model
 Y = [inflation outputGap];
 X = PCOrtec;
 var = varm(size(X,2),1); % Autoregressive dynamic of X
@@ -26,7 +26,7 @@ favar = varm('AR', {macroSpec});
     forecastDFM( Y, X, favar, var, w, k, true, shortRate);
 clear Y X var macroSpec favar
 
-%% Model specification: FAVAR model without unemployment
+%% Model specification 2: FAVAR model without unemployment
 Y = [inflation outputGap];
 X = PCOrtec;
 var = varm('AR',{diag(nan(size(X,2),1))}); % Autoregressive dynamic of X
@@ -36,7 +36,7 @@ favar = varm('AR', {macroSpec});
     forecastDFM( Y, X, favar, var, w, k, true, shortRate);
 clear Y X var macroSpec favar
 
-%% Model specification: FAVAR model with unemployment
+%% Model specification 3: FAVAR model with unemployment
 Y = [inflation outputGap unemployment];
 X = PCOrtec;
 var = varm('AR',{diag(nan(size(X,2),1))}); % Autoregressive dynamic of X
@@ -46,7 +46,7 @@ favar = varm('AR', {macroSpec});
     forecastDFM( Y, X, favar, var, w, k, true, shortRate);
 clear Y X var macroSpec favar
 
-%% Model specification: FAVAR model with unemployment and restrictions
+%% Model specification 4: FAVAR model with unemployment and restrictions
 Y = [inflation outputGap unemployment];
 X = PCOrtec;
 var = varm('AR',{diag(nan(size(X,2),1))}); % Autoregressive dynamic of X
@@ -60,3 +60,11 @@ clear Y X var macroSpec favar
 q = 33; % Number of parameters for Kalman ML estimation
 Lt = normPCs(:,1);
 St = normPCs(:,2);
+
+%% Model comparison to benchmark
+copmarisonMAE = zeros(3, k, m-1);
+copmarisonRMSE = zeros(3, k, m-1);
+for i=2:m
+    copmarisonMAE = MAE(:,:,i)./MAE(:,:,1);
+    copmarisonRMSE = RMSE(:,:,i)./RMSE(:,:,1);
+end
