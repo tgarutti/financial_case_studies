@@ -1,6 +1,6 @@
 %% Clear variables
 clear w n i window
-clear res_it res_Lt res_pi res_res res_St res_y
+%clear res_it res_Lt res_pi res_res res_St res_y
 clear coefficients_inflation coefficients_Lt coefficients_outputGap...
     coefficients_residuals coefficients_shortRate coefficients_St
 clear Aeq beq r p options initial estimates deltaL deltaS zeta Pi Q Sigma...

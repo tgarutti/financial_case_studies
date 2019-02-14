@@ -53,14 +53,12 @@ for s=1:forecastHorizon
     if s==1
         forecastedXi(:,s) = forecastXi(xi(:,end),forecastedX,...
                                 Pi,Theta1,Theta2,(i+w-1),s,actualX);
-        forecastedX(:,s)  = forecastX(xi(:,end),forecastedX,...
-                                Q,H1,H2,c,(i+w-1),s,actualX);
     else
         forecastedXi(:,s) = forecastXi(forecastedXi(:,s-1),forecastedX,...
                                 Pi,Theta1,Theta2,(i+w-1),s,actualX);
-        forecastedX(:,s)  = forecastX(forecastedXi(:,s),forecastedX,...
-                                Q,H1,H2,c,(i+w-1),s,actualX);       
     end
+    forecastedX(:,s)  = forecastX(forecastedXi(:,s),forecastedX,...
+                            Q,H1,H2,c,(i+w-1),s,actualX);       
     
    
     forecastsX(i,:,:) = forecastedX;

@@ -5,7 +5,7 @@ normPCs = normalize(PCs);
 
 %% Initialize variables for model comparison
 k = 16; % k-step ahead forecast
-w = 80; % Window length
+w = 100; % Window length
 lags = 1;
 RMSE = zeros(4, k, 2);
 MAE = zeros(4, k, 2);
