@@ -17,6 +17,7 @@ Theta1 = zeros(d,d);
 Theta2 = zeros(d,d);
 H1 = zeros(l,d);
 H2 = zeros(l,d);
+c = zeros(l,1);
 
 Pi(1,1) = parameter_vector(1);
 Pi(1,2) = parameter_vector(2);
@@ -39,22 +40,26 @@ S(2,3) = parameter_vector(15);
 S(3,2) = parameter_vector(16);
 S(3,3) = parameter_vector(17);
 
-Theta1(1,1) = parameter_vector(18);
-Theta1(1,2) = parameter_vector(19);
-Theta1(2,1) = parameter_vector(20);
-Theta1(2,2) = parameter_vector(21);
+H1(2,1) = parameter_vector(18);
+H1(2,2) = parameter_vector(19);
+H1(3,2) = parameter_vector(20);
 
-Theta2(1,1) = parameter_vector(22);
-Theta2(1,2) = parameter_vector(23);
-Theta2(2,1) = parameter_vector(24);
-Theta2(2,2) = parameter_vector(25);
+H2(2,1) = parameter_vector(21);
+H2(3,2) = parameter_vector(22);
 
-H1(2,1) = parameter_vector(26);
-H1(2,2) = parameter_vector(27);
-H1(3,2) = parameter_vector(28);
+c(1) = parameter_vector(23);
+c(2) = parameter_vector(24);
+c(3) = parameter_vector(25);
 
-H2(2,1) = parameter_vector(29);
-H2(3,2) = parameter_vector(30);
+Theta1(1,1) = parameter_vector(26);
+Theta1(1,2) = parameter_vector(27);
+Theta1(2,1) = parameter_vector(28);
+Theta1(2,2) = parameter_vector(29);
+
+Theta2(1,1) = parameter_vector(30);
+Theta2(1,2) = parameter_vector(31);
+Theta2(2,1) = parameter_vector(32);
+Theta2(2,2) = parameter_vector(33);
 
 % Diffuse initialisation
 mu0    = zeros(d,1);
@@ -83,7 +88,7 @@ for t=3:T
     
     % Updating step
     xi(:,t)  = predictedxi(:,t)+kalmanGain(:,:,t)*...
-        (y(:,t)-Q*predictedxi(:,t)-H1*z(:,t-1)-H2*z(:,t-2));
+        (y(:,t)-c-Q*predictedxi(:,t)-H1*z(:,t-1)-H2*z(:,t-2));
     P(:,:,t) = (eye(d)-kalmanGain(:,:,t)*Q)*predictedP(:,:,t);
     % Close the loop over time
 end
