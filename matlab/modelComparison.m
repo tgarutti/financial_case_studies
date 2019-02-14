@@ -62,9 +62,9 @@ Lt = normPCs(:,1);
 St = normPCs(:,2);
 
 %% Model comparison to benchmark
-copmarisonMAE = zeros(3, k, m-1);
-copmarisonRMSE = zeros(3, k, m-1);
-for i=2:m
-    copmarisonMAE = MAE(:,:,i)./MAE(:,:,1);
-    copmarisonRMSE = RMSE(:,:,i)./RMSE(:,:,1);
+copmarisonMAE = zeros(3, k, m);
+copmarisonRMSE = zeros(3, k, m);
+for i=1:m
+    copmarisonMAE(:,:,i) = MAE(:,:,i)./MAE(:,:,1);
+    copmarisonRMSE(:,:,i)x` = RMSE(:,:,i)./RMSE(:,:,1);
 end
