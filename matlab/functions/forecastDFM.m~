@@ -12,10 +12,10 @@ function [ forecasts, MAE, RMSE ] = forecastDFM( Y, X, favar, var, w, k ,...
 %   SR is a boolean specifying if the short rate should be estimated by
 %   means of the Bernanke equation using the forecasts of Y. 
 %% Initialization of variables
-if SR == TRUE
-    c = size(X,2)+1;
+if SR == true
+    c = size(Y,2)+1;
 else
-    c = size(X,2);
+    c = size(Y,2);
 end
 n = length(Y(:,1)); 
 u = n-w+1;
@@ -35,14 +35,32 @@ for i = 1:u
     [YFit,~,~,~] = estimate(favar, Yw, 'X', Xw);
     [Yforecasts,~] = forecast(YFit, k, Yw, 'X', Xforecasts);
     
+    b = regress(shortRate(window), [ones(length(window),1) Yw]);
+    gy  = b(3);
+    gPi = b(2)-1;
+    r   = b(1)+0.02*gPi;
+    
     for j = 1:k
-        if SR == TRUE
-        forecasts(i,2:end,j) = f(j,:);
-        forecasts(i,1,j) = 0.02 + 1.0*forecasts(i,4,j) + ...
-            1.5*forecasts(i,3,j) - 0.5*0.02;
-        else
+        if SR == true
+            forecasts(i,2:end,j) = Yforecasts(j,:);
+            forecasts(i,1,j) = 0.02 + 1.0*forecasts(i,3,j) + ...
+                1.5*forecasts(i,2,j) - 0.5*0.02;
             
+            
+        else
+            forecasts(i,:,j) = Yforecasts(j,:);
+        end
     end
 end
-end
+forecasts = forecasts(:,1:3,:);
 
+%% Evaluate forecasts
+RMSE = zeros(3,k);
+MAE = zeros(3,k);
+for i = 1:k
+    f_w = (w+i):n;
+    f = forecasts(1:(end-i),1:3,i);
+    actuals = [shortRate(f_w) Y(f_w,1:2)];
+    [RMSE(:,i), MAE(:,i)] = evaluate_forecasts(f, actuals);
+end
+end
