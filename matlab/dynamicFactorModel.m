@@ -5,7 +5,7 @@ normPCs = normalize(PCs);
 
 %% Initialize variables for model comparison
 k = 16; % k-step ahead forecast
-w = 80; % Window length
+w = 100; % Window length
 lags = 1;
 RMSE = zeros(4, k, 2);
 MAE = zeros(4, k, 2);
@@ -20,7 +20,7 @@ macroSpec1 = [NaN NaN; NaN NaN];
 macroSpec2 = diag(nan(2,1));
 
 %% Forecast the dynamic factor model
-forecastDFM
+runDFM
 
 %% Define variables for model with unemployment
 model = 2;
@@ -31,7 +31,7 @@ macroSpec1 = [NaN NaN 0; NaN NaN NaN; 0 0 NaN];
 macroSpec2 = diag(nan(3,1));
 
 %% Forecast the dynamic factor model
-forecastDFM
+runDFM
 clear PCFit f_w f dfmFit i var
 %% Compare models
 eval(:,:,1) = MAE(:,:,2)./MAE(:,:,1);

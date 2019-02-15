@@ -31,8 +31,8 @@ Pi = [Gamma(5,5),Gamma(5,6);
 
 % Initialize inflation and output gap dependencies on latent states and
 % lags of inflation/output gap
-deltaL = 0;
-deltaS = 0;
+deltaL = 0.1;
+deltaS = 0.1;
 
 % As Sims may yield unwanted zeros for various windows, perform a check
 % that assigns a uniform random number to the initial estimate if it is
@@ -40,6 +40,8 @@ deltaS = 0;
 e = 1e-4;
 
 Sigma = zeros(2,2);
+
+pit_yt = cov(inflation(window),outputGap(window));
 
 Sigma(1,1) = simsCheck(Omega(5,3),e);
 Sigma(1,2) = simsCheck(Omega(5,4),e);
@@ -50,10 +52,10 @@ R = Sigma*Sigma'; % Covariance matrix of the states
 
 J      = zeros(3,3);
 J(1,1) = std(shortRate(window));
-J(2,2) = simsCheck(Omega(1,1),e);
-J(2,3) = simsCheck(Omega(1,2),e);
-J(3,2) = simsCheck(Omega(3,1),e);
-J(3,3) = simsCheck(Omega(3,2),e);
+J(2,2) = simsCheck(Omega(1,1)*sqrt(pit_yt(1,1)),e);
+J(2,3) = simsCheck(Omega(1,2)*sqrt(pit_yt(1,2)),e);
+J(3,2) = simsCheck(Omega(3,1)*sqrt(pit_yt(2,1)),e);
+J(3,3) = simsCheck(Omega(3,2)*sqrt(pit_yt(2,2)),e);
 
 S = J*J'; % Covariance matrix of the observations
 
@@ -61,8 +63,8 @@ Q = zeros(3,2);
 
 Q(1,1) = deltaL;
 Q(1,2) = deltaS;
-Q(2,1) = coefpi(1);%simsCheck(Gamma(1,5),e);
-Q(3,2) = -coefy(5);%simsCheck(Gamma(3,6),e);
+Q(2,1) = coefpi(1);
+Q(3,2) = -coefy(5);
 
 Theta1 = [Gamma(5,1),Gamma(5,3);
           Gamma(6,1),Gamma(6,3)];
@@ -98,8 +100,8 @@ initialEstimates = [Pi(1,1),Pi(1,2),Pi(2,1),Pi(2,2),R(1,1),R(1,2),R(2,1),R(2,2),
     Theta2(1,1),Theta2(1,2),Theta2(2,1),Theta2(2,2)];
 
 % Lower and upper bounds on the coefficients 
-lb = [-1,-1,-1,-1,0,-Inf,-Inf,0,-Inf,-Inf,-Inf,-Inf,0,0,-Inf,-Inf,0,-1,-1,-1,-1,-1,-Inf,-Inf,-Inf,-Inf,-Inf,-Inf,-Inf,-Inf,-Inf,-Inf,-Inf];
-ub = [1,1,1,1,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,1,1,1,1,1,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf];
+lb = [0,-1,-1,0,0,-10,-10,0,-1,-1,-10,-10,0,0,-10,-10,0,0.2,-1,0.2,-1,-1,-10,-10,-10,-2,-2,-2,-2,-2,-2,-2,-2];
+ub = [1,1,1,1,10,10,10,10,1,1,10,10,10,10,10,10,10,10,1,10,1,1,10,10,10,2,2,2,2,2,2,2,2];
 
 % Add restrictions on the covariances of the states and observations
 r = 2;
