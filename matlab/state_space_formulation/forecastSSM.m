@@ -60,8 +60,6 @@ for s=1:forecastHorizon
     forecastedX(:,s)  = forecastX(forecastedXi(:,s),forecastedX,...
                             Q,H1,H2,c,(i+w-1),s,actualX);       
     
-    forecastedX(:,s)  = forecastX(forecastedXi(:,s),forecastedX,...
-                            Q,H1,H2,c,(i+w-1),s,actualX);
     forecastsX(i,:,:) = forecastedX;
     forecastsXi(i,:,:) = forecastedXi;
     
