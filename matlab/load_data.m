@@ -19,7 +19,7 @@ filename = 'yieldCurveOrtec';
 [~,~,~]      = xlsread(filename,'Interpolated Data','A5:A136');
 [originalYields,~]    = xlsread(filename,'Original Data','B46:K177');
 [interpYields,~]    = xlsread(filename,'Interpolated Data','B5:K136');
-[PCs,~]    = xlsread(filename,'Principal Components','B2:i133');
+[PCs,~]    = xlsread(filename,'Principal Components','B2:I133');
 
 %% Scale data
 PCs = PCs/100;
