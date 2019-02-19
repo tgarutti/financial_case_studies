@@ -43,7 +43,8 @@ e = 1e-4;
 
 Sigma = zeros(2,2);
 
-obs = cov(inflation(window),outputGap(window),unemployment(window),nairu(window));
+g = [inflation(window),outputGap(window),unemployment(window),nairu(window)]';
+obs = cov(g);
 
 Sigma(1,1) = simsCheck(Omega(9,5),e);
 Sigma(1,2) = simsCheck(Omega(9,6),e);
@@ -52,13 +53,15 @@ Sigma(2,2) = simsCheck(Omega(6,6),e);
 
 R = Sigma*Sigma'; % Covariance matrix of the states
 
-J      = zeros(5,5);
-J(1,1) = std(shortRate(window));
-J(2:end,2:end) = sqrt(obs);
+J = [std(shortRate(window)),0,0,0,0;
+    0,sqrt(obs(1,1)),sqrt(abs(obs(1,2))),sqrt(abs(obs(1,3))),sqrt(abs(obs(1,4)));
+    0,sqrt(abs(obs(2,1))),sqrt(obs(2,2)),sqrt(abs(obs(2,3))),sqrt(abs(obs(2,4)));
+    0,sqrt(abs(obs(3,1))),sqrt(abs(obs(3,2))),sqrt(obs(3,3)),sqrt(abs(obs(3,4)));
+    0,sqrt(abs(obs(4,1))),sqrt(abs(obs(4,2))),sqrt(abs(obs(4,3))),sqrt(obs(4,4))];
 
 S = J*J'; % Covariance matrix of the observations
 
-Q = zeros(3,2);
+Q = zeros(5,2);
 
 Q(1,1) = deltaL;
 Q(1,2) = deltaS;
@@ -84,8 +87,8 @@ H2 = [0,0,0,0;
       0,0,Gamma(7,8),0];
 
 H3 = [0,0,0,0,0,0,0,0,0,0;
-      coefpi(6:end);
-      coefy(6:end);
+      coefpi(6:end-1);
+      coefy(6:end-1);
       0,0,0,0,0,0,0,0,0,0;
       0,0,0,0,0,0,0,0,0,0];
   
