@@ -2,7 +2,7 @@
 global xi
 
 % Set the number of steps ahead one would like to forecast
-forecastHorizon = 16;
+forecastHorizon = k;
 
 % Gather the full data set to evaluate forecasts
 actualX = [shortRate, inflation,  outputGap]';
