@@ -1,29 +1,34 @@
+function [ forecastsX, MAE, RMSE ] = forecast_SSM( model, w, l )
+%UNTITLED5 Summary of this function goes here
+%   Detailed explanation goes here
 %% Load data
-load_data
+load_data_temp
 
 %% Normalize the principle components of the yield curve data
 normPCs = normalize(PCs);
 
 %% Define regression window and variables
-k = 16;
-w = 100; % Window length of 25 years
 n = length(inflation);
 u = n-w+1; % Number of filters
 q = 53; % Number of parameters for Kalman ML estimation
 Lt = normPCs(:,1);
 St = normPCs(:,2);
 
-%% Plots
-%plots
-
 %% Moving window regressions and Sims algorithm
 initialize_variables
 
 for i = 1:u
     window = i:(i+w-1);
-    run_regressions_plusFt % Runs regressions with PCs
-    %coefficientsB   % Obtains the B coefficients for the yield curve
-    macroStateSpace_plusFt % Runs the Kalman filter and performs MLE
+    if model == 'PC'
+        run_regressions_plusFt % Runs regressions 
+        macroStateSpace_plusFt % Runs the Kalman filter and performs MLE
+    elseif model == 'unemployment'
+        run_regressions_plusFt_unemployment % Runs regressions 
+        macroStateSpace_plusFt_unemployment % Runs the Kalman filter and performs MLE
+    else
+        run_regressions
+        macroStateSpace
+    end
 end
 
 for s=1:16
@@ -31,13 +36,13 @@ for s=1:16
     stateSpaceForecastRMSE(:,s) = sqrt(mean(forecastErrors(:,s,1:end-s-1).^2,3));
 end
 
-SSM_MAE = zeros(3,16);
-SSM_RMSE = zeros(3,16);
-for k = 1:16
-    f_w = (w+k):length(inflation);
-    f = forecastsX(1:(end-k),:,k);
+MAE = zeros(3,16);
+RMSE = zeros(3,16);
+for l = 1:16
+    f_w = (w+l):length(inflation);
+    f = forecastsX(1:(end-l),:,l);
     actuals = [shortRate(f_w) inflation(f_w) outputGap(f_w)];
-    [SSM_RMSE(:,k), SSM_MAE(:,k)] = evaluate_forecasts(f, actuals);
+    [RMSE(:,l), MAE(:,l)] = evaluate_forecasts(f, actuals);
 end
 
 coefficients = table(coefficients_shortRate, coefficients_Lt,...
@@ -45,3 +50,6 @@ coefficients = table(coefficients_shortRate, coefficients_Lt,...
     coefficients_outputGap);
 
 clear_variables
+
+end
+

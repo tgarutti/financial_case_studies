@@ -5,7 +5,7 @@ window = i:(i+w-1);
 % Regression of short rate
 X_it = [ones(length(Lt(window(1):window(end))),1) Lt(window(1):window(end))...
     St(window(1):window(end))];
-Y_it = 100*shortRate(window(1):window(end));
+Y_it = shortRate(window(1):window(end));
 
 [coefit, ~, residualit] = lsqlin(X_it, Y_it, [], []);
 coefit = coefit';
