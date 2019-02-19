@@ -65,10 +65,24 @@ residualy = residualy';
 
 % Regression of unemployment
 Enut = unemployment + normrnd(0,1,size(unemployment));
-X_nu = [Enut(window(4):window(end) unemployment(window(2):window(end-2))...
-    unemployment(window(1):window(end-3))]
+X_nu = [Enut(window(4):window(end)) unemployment(window(2):window(end-2))...
+    unemployment(window(1):window(end-3))];
+Y_nu = unemployment(window(3):window(end-1));
+
+[coefnu, ~, residualnu] = lsqlin(X_nu, Y_nu, [], []);
+coefnu = [coefnu(1) 1-coefnu(1) coefnu(2)/(1-coefnu(1)) coefnu(3)/(1-coefnu(1))];
+residualnu = residualnu';
 
 % Regression of NAIRU
+Enustart = nairu + normrnd(0,1,size(nairu));
+X_nustar = [Enustart(window(4):window(end)) nairu(window(2):window(end-2))...
+    nairu(window(1):window(end-3))];
+Y_nustar = nairu(window(3):window(end-1));
+
+[coefnustar, ~, residualnustar] = lsqlin(X_nustar, Y_nustar, [], []);
+coefnustar = [coefnustar(1) 1-coefnustar(1) coefnustar(2)/(1-coefnustar(1))...
+    coefnustar(3)/(1-coefnustar(1))];
+residualnustar = residualnustar';
 
 % Coefficient matrix
 coefficients_shortRate = [coefficients_shortRate; coefit];
@@ -77,6 +91,8 @@ coefficients_St = [coefficients_St; coefSt];
 coefficients_residuals = [coefficients_residuals; coefres];
 coefficients_inflation = [coefficients_inflation; coefpi];
 coefficients_outputGap = [coefficients_outputGap; coefy];
+coefficients_unemployment = [coefficients_unemployment; coefnu];
+coefficients_nairu = [coefficients_nairu; coefnustar];
 
 % Residual matrix
 res_it   = [res_it; residualit];
@@ -85,11 +101,13 @@ res_St   = [res_St; residualSt];
 res_res  = [res_res; residualres];
 res_pi   = [res_pi; residualpi];
 res_y    = [res_y; residualy]; 
+res_nu   = [resnu; residualnu];
+res_nustar = [resnustar; residualnustar];
 
 %% Run sims algorithm
-runSims
-rho(:,:,i) = gammaSims(1:7,1:7);
-sigma(:,:,i) = omegaSims(1:7,:);
+runSims_unemployment
+rho(:,:,i) = gammaSims(1:10,1:10);
+sigma(:,:,i) = omegaSims(1:10,:);
 
 F(:,:,i) = [inflation(window(2):window(end))';...
     inflation(window(1):window(end-1))';...

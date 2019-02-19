@@ -10,24 +10,24 @@ muPi = coefpi(1);
 ay   = coefpi(5);
 aPi1 = coefpi(3);
 aPi2 = coefpi(4);
-aNu  = coefpi();
+aNu  = coefpi(16);
 
 % Output dynamics
 muy  = coefy(1);
 br   = coefy(5);
 by1  = coefy(3);
 by2  = coefy(4);
-bNu  = coefy();
+bNu  = coefy(16);
 
 % Unemployment dynamics
-muNu = coefnu();
-psi1 = coefnu();
-psi2 = coefnu();
+muNu = coefnu(1);
+psi1 = coefnu(3);
+psi2 = coefnu(4);
 
 % NAIRU dynamics
-muNuStar = coefnustar();
-chi1     = coefnustar();
-chi2     = coefnustar();
+muNuStar = coefnustar(1);
+chi1     = coefnustar(3);
+chi2     = coefnustar(4);
 
 % Define the system as:
 % Gamma0*Y_t = C + Gamma1*Y_{t-1} + Psi*epsilon_t * Pi*eta_t

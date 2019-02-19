@@ -6,10 +6,10 @@ normPCs = normalize(PCs);
 
 %% Define regression window and variables
 k = 16;
-w = 100; % Window length of 25 years
+w = 80; % Window length of 20 years
 n = length(inflation);
 u = n-w+1; % Number of filters
-q = 53; % Number of parameters for Kalman ML estimation
+q = 71; % Number of parameters for Kalman ML estimation
 Lt = normPCs(:,1);
 St = normPCs(:,2);
 

@@ -5,7 +5,7 @@ global xi Ft
 forecastHorizon = 16;
 
 % Gather the full data set to evaluate forecasts
-actualX = [shortRate,inflation,outputGap]';
+actualX = [shortRate,inflation,outputGap,unemployment,nairu]';
 
 forecastedXi = zeros(2,forecastHorizon);
 forecastedX  = zeros(3,forecastHorizon);
@@ -15,9 +15,9 @@ forecastErr  = zeros(3,forecastHorizon);
 % Unpack ML parameters
 Pi = zeros(2,2);
 Q  = zeros(3,2);
-H1 = zeros(3,2);
-H2 = zeros(3,2);
-H3 = zeros(3,10);
+H1 = zeros(5,2);
+H2 = zeros(5,2);
+H3 = zeros(5,10);
 c = zeros(3,1);
 
 Pi(1,1) = ML_parameters(i,1);
@@ -71,6 +71,14 @@ H3(3,7) = ML_parameters(i,50);
 H3(3,8) = ML_parameters(i,51);
 H3(3,9) = ML_parameters(i,52);
 H3(3,10) = ML_parameters(i,53);
+
+H1(3,3) = ML_parameters(i,54);
+H1(3,4) = ML_parameters(i,55);
+H1(4,3) = ML_parameters(i,56);
+H1(5,3) = ML_parameters(i,57);
+
+H2(4,3) = ML_parameters(i,58);
+H2(5,3) = ML_parameters(i,59);
 
 % Construct a VAR(1) model for the window PCs
 varModel = varm(10,1);
