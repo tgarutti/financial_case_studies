@@ -13,9 +13,9 @@ d = 2; % 2 states, xi_t = [L_t S_t]'
 
 % Extract what is needed from parameter_vector
 S  = zeros(l,l);
-Q  = zeros(l,d);
-H1 = zeros(l,d);
-H2 = zeros(l,d);
+Q  = zeros(3,d);
+H1 = zeros(l,4);
+H2 = zeros(l,4);
 H3 = zeros(l,10);
 c = zeros(l,1);
 

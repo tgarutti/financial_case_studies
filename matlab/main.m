@@ -21,9 +21,9 @@ initialize_variables
 
 for i = 1:u
     window = i:(i+w-1);
-    run_regressions_plusFt % Runs regressions with PCs
+    run_regressions_plusFt_unemployment % Runs regressions with PCs
     %coefficientsB   % Obtains the B coefficients for the yield curve
-    macroStateSpace_plusFt % Runs the Kalman filter and performs MLE
+    macroStateSpace_plusFt_unemployment % Runs the Kalman filter and performs MLE
 end
 
 for s=1:16

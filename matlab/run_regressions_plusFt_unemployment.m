@@ -54,7 +54,7 @@ Eyt = outputGap + normrnd(0,1,size(outputGap));
 X_y = [Eyt(window(4):window(end)) outputGap(window(2):window(end-2)) ...
     outputGap(window(1):window(end-3)) -St(window(2):window(end-2))...
     PCOrtec(window(3):window(end-1),:) ...
-    -(unemployment(window(2):window(end-1))-nairu(window(2):window(end-1)))];
+    -(unemployment(window(2):window(end-2))-nairu(window(2):window(end-2)))];
 Y_y = outputGap(window(3):window(end-1));
 
 [coefy, ~, residualy] = lsqlin(X_y, Y_y, [], []);
@@ -101,8 +101,8 @@ res_St   = [res_St; residualSt];
 res_res  = [res_res; residualres];
 res_pi   = [res_pi; residualpi];
 res_y    = [res_y; residualy]; 
-res_nu   = [resnu; residualnu];
-res_nustar = [resnustar; residualnustar];
+res_nu   = [res_nu; residualnu];
+res_nustar = [res_nustar; residualnustar];
 
 %% Run sims algorithm
 runSims_unemployment

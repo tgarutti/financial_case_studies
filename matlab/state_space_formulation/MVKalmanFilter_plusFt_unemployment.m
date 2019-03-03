@@ -12,11 +12,11 @@ d = 2; % 2 states, xi_t = [L_t S_t]'
 Pi = zeros(d,d);
 R  = zeros(d,d);
 S  = zeros(l,l);
-Q  = zeros(l,d);
+Q  = zeros(3,d);
 Theta1 = zeros(d,d);
 Theta2 = zeros(d,d);
-H1 = zeros(l,d);
-H2 = zeros(l,d);
+H1 = zeros(l,4);
+H2 = zeros(l,4);
 H3 = zeros(l,10);
 c = zeros(l,1);
 
