@@ -78,7 +78,7 @@ LL     = zeros(1,T);
 for t=3:T
     covar(:,:,t) = Q*(predictedP(:,:,t)*Q')+S;
     mu(:,t)      = c+Q*predictedxi(:,t)+H1*z(:,t)+H2*z(:,t-1)+H3*Ft(:,t)+...
-        H4*unemp(t-1)+H5*nair_u(t-1);
+        H4*unemp(t)+H5*nair_u(t);
     LL(t)        = log(1/sqrt(det(2*pi*covar(:,:,t)))*...
                 exp(-1/2*(y(:,t)-mu(:,t))'*(covar(:,:,t)\(y(:,t)-mu(:,t)))));
 end
