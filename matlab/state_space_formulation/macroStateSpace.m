@@ -1,7 +1,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % The variables below are found using regressions using in-sample data.
 % These provide an "initial state" for the Kalman filter to begin ML
-% estimation. First, the linear rational expectations system needs to be 
+% estimation. First, the linear rational expectations system needs to be
+% solved using the Sims algorithm and resulting parametrers scaled
+% accordingly.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

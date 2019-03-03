@@ -1,4 +1,4 @@
-function [ forecasts, MAE, RMSE ] = forecastDFM( Y, X, favar, var, w, k ,...
+function [ forecasts, MAE, RMSE ] = forecastDFM( Y, X, favar, var, w, k,...
     SR, shortRate)
 %FORECASTDFM Forecasts a dynamic factor model specified by favar and var
 %for a given window and forecast horizon.
@@ -35,11 +35,19 @@ for i = 1:u
     [YFit,~,~,~] = estimate(favar, Yw, 'X', Xw);
     [Yforecasts,~] = forecast(YFit, k, Yw, 'X', Xforecasts);
     
+    b = regress(shortRate(window), [ones(length(window),1) Yw]);
+    gy  = b(3);
+    gPi = b(2)-1;
+    r   = b(1)+0.02*gPi;
+    
     for j = 1:k
         if SR == true
             forecasts(i,2:end,j) = Yforecasts(j,:);
             forecasts(i,1,j) = 0.02 + 1.0*forecasts(i,3,j) + ...
                 1.5*forecasts(i,2,j) - 0.5*0.02;
+            
+            forecasts(i,1,j) = r + (1+gPi)*forecasts(i,2,j) + ...
+                gy*forecasts(i,3,j);
         else
             forecasts(i,:,j) = Yforecasts(j,:);
         end

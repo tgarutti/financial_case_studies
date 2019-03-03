@@ -1,21 +1,21 @@
-function [output] = MVNegativeLogLikelihood_plusFt(parameter_vector,y)
+function [output] = MVNegativeLogLikelihood_plusFt_unemployment(parameter_vector,y)
 
 % Call global variables
-global xi z Ft
+global xi Ft g
 
 % Extract length of the data, and the dimensionality of the problem
 T = size(y,2);
-l = size(y,1); % 3 observations, x_t = [i_t pi_t y_t]'
+l = size(y,1); % 5 observations, x_t = [i_t pi_t y_t nu_t nustar_t]'
 d = 2; % 2 states, xi_t = [L_t S_t]'
 
 % Run the Kalman filter
-[xi,~,predictedxi,predictedP] = MVKalmanFilter_plusFt(parameter_vector,y);
+[xi,~,predictedxi,predictedP] = MVKalmanFilter_plusFt_unemployment(parameter_vector,y);
 
 % Extract what is needed from parameter_vector
 S  = zeros(l,l);
-Q  = zeros(l,d);
-H1 = zeros(l,d);
-H2 = zeros(l,d);
+Q  = zeros(3,d);
+H1 = zeros(l,4);
+H2 = zeros(l,4);
 H3 = zeros(l,10);
 c = zeros(l,1);
 
@@ -62,6 +62,27 @@ H3(3,8) = parameter_vector(51);
 H3(3,9) = parameter_vector(52);
 H3(3,10) = parameter_vector(53);
 
+H1(3,3) = parameter_vector(54);
+H1(3,4) = parameter_vector(55);
+H1(4,3) = parameter_vector(56);
+H1(5,3) = parameter_vector(57);
+
+H2(4,3) = parameter_vector(58);
+H2(5,3) = parameter_vector(59);
+
+S(2,4) = parameter_vector(60);
+S(2,5) = parameter_vector(61);
+S(3,4) = parameter_vector(62);
+S(3,5) = parameter_vector(63);
+S(4,2) = parameter_vector(64);
+S(4,3) = parameter_vector(65);
+S(4,4) = parameter_vector(66);
+S(4,5) = parameter_vector(67);
+S(5,2) = parameter_vector(68);
+S(5,3) = parameter_vector(69);
+S(5,4) = parameter_vector(70);
+S(5,5) = parameter_vector(71);
+
 % Initialize arrays
 mu     = zeros(l,T);
 covar  = zeros(l,l,T);
@@ -70,7 +91,7 @@ LL     = zeros(1,T);
 % Collect a row vector of log likelihood per observation
 for t=3:T
     covar(:,:,t) = Q*(predictedP(:,:,t)*Q')+S;
-    mu(:,t)      = c+Q*predictedxi(:,t)+H1*z(:,t)+H2*z(:,t-1)+H3*Ft(:,t);
+    mu(:,t)      = c+Q*predictedxi(:,t)+H1*g(:,t)+H2*g(:,t-1)+H3*Ft(:,t);
     LL(t)        = log(1/sqrt(det(2*pi*covar(:,:,t)))*...
                 exp(-1/2*(y(:,t)-mu(:,t))'*(covar(:,:,t)\(y(:,t)-mu(:,t)))));
 end

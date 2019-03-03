@@ -5,10 +5,11 @@ load_data
 normPCs = normalize(PCs);
 
 %% Define regression window and variables
-w = 100; % Window length of 10 years
+k = 16;
+w = 80; % Window length of 20 years
 n = length(inflation);
 u = n-w+1; % Number of filters
-q = 33; % Number of parameters for Kalman ML estimation
+q = 71; % Number of parameters for Kalman ML estimation
 Lt = normPCs(:,1);
 St = normPCs(:,2);
 
@@ -20,9 +21,9 @@ initialize_variables
 
 for i = 1:u
     window = i:(i+w-1);
-    run_regressions % Runs regressions
-    coefficientsB   % Obtains the B coefficients for the yield curve
-    macroStateSpace % Runs the Kalman filter and performs MLE
+    run_regressions_plusFt_unemployment % Runs regressions with PCs
+    %coefficientsB   % Obtains the B coefficients for the yield curve
+    macroStateSpace_plusFt_unemployment % Runs the Kalman filter and performs MLE
 end
 
 for s=1:16
@@ -30,8 +31,8 @@ for s=1:16
     stateSpaceForecastRMSE(:,s) = sqrt(mean(forecastErrors(:,s,1:end-s-1).^2,3));
 end
 
-SSM_MAE = zeros(3, 16);
-SSM_RMSE = zeros(3, 16);
+SSM_MAE = zeros(3,16);
+SSM_RMSE = zeros(3,16);
 for k = 1:16
     f_w = (w+k):length(inflation);
     f = forecastsX(1:(end-k),:,k);

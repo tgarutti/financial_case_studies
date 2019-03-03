@@ -1,14 +1,15 @@
 %% Forecast unobserved and observed variables
-global xi
+global xi Ft
 
 % Set the number of steps ahead one would like to forecast
-forecastHorizon = k;
+forecastHorizon = 16;
 
 % Gather the full data set to evaluate forecasts
-actualX = [shortRate, inflation,  outputGap]';
+actualX = [shortRate,inflation,outputGap]';
 
 forecastedXi = zeros(2,forecastHorizon);
 forecastedX  = zeros(3,forecastHorizon);
+forecastedFt = zeros(10,forecastHorizon);
 forecastErr  = zeros(3,forecastHorizon);
 
 % Unpack ML parameters
@@ -16,6 +17,7 @@ Pi = zeros(2,2);
 Q  = zeros(3,2);
 H1 = zeros(3,2);
 H2 = zeros(3,2);
+H3 = zeros(3,10);
 c = zeros(3,1);
 
 Pi(1,1) = ML_parameters(i,1);
@@ -49,7 +51,37 @@ Theta2(1,2) = ML_parameters(i,31);
 Theta2(2,1) = ML_parameters(i,32);
 Theta2(2,2) = ML_parameters(i,33);
 
+H3(2,1) = ML_parameters(i,34);
+H3(2,2) = ML_parameters(i,35);
+H3(2,3) = ML_parameters(i,36);
+H3(2,4) = ML_parameters(i,37);
+H3(2,5) = ML_parameters(i,38);
+H3(2,6) = ML_parameters(i,39);
+H3(2,7) = ML_parameters(i,40);
+H3(2,8) = ML_parameters(i,41);
+H3(2,9) = ML_parameters(i,42);
+H3(2,10) = ML_parameters(i,43);
+H3(3,1) = ML_parameters(i,44);
+H3(3,2) = ML_parameters(i,45);
+H3(3,3) = ML_parameters(i,46);
+H3(3,4) = ML_parameters(i,47);
+H3(3,5) = ML_parameters(i,48);
+H3(3,6) = ML_parameters(i,49);
+H3(3,7) = ML_parameters(i,50);
+H3(3,8) = ML_parameters(i,51);
+H3(3,9) = ML_parameters(i,52);
+H3(3,10) = ML_parameters(i,53);
+
+% Construct a VAR(1) model for the window PCs
+varModel = varm(10,1);
+Est = estimate(varModel,Ft');
+PCPhi = Est.AR{1};
+
 for s=1:forecastHorizon
+    % First, forecast the PCs
+    forecastedFt(:,s) = forecastFt(PCPhi,PCOrtec',(i+w-1),s);
+    
+    % Second, forecast the hidden states
     if s==1
         forecastedXi(:,s) = forecastXi(xi(:,end),forecastedX,...
                                 Pi,Theta1,Theta2,(i+w-1),s,actualX);
@@ -57,13 +89,15 @@ for s=1:forecastHorizon
         forecastedXi(:,s) = forecastXi(forecastedXi(:,s-1),forecastedX,...
                                 Pi,Theta1,Theta2,(i+w-1),s,actualX);
     end
+    
+    % Third, forecast the macroeconomic variables
     forecastedX(:,s)  = forecastX(forecastedXi(:,s),forecastedX,...
-                            Q,H1,H2,[],[],c,(i+w-1),s,actualX);       
+                            Q,H1,H2,H3,forecastedFt,c,(i+w-1),s,actualX);       
     
     forecastsX(i,:,:) = forecastedX;
     forecastsXi(i,:,:) = forecastedXi;
     
-    % Calculate forecast error
+    % Finally, calculate forecast error
     if (i+w-1+s)<length(actualX)
         forecastErr(:,s) = forecastedX(:,s)-actualX(:,i+w-1+s);
     else

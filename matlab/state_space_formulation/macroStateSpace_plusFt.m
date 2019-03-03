@@ -2,6 +2,8 @@
 % The variables below are found using regressions using in-sample data.
 % These provide an "initial state" for the Kalman filter to begin ML
 % estimation. First, the linear rational expectations system needs to be 
+% solved using the Sims algorithm and resulting parametrers scaled
+% accordingly.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -19,7 +21,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Set global variable to be used in the Kalman filter
-global z PCOrtec_window
+global z Ft
 
 %% Define variables
 Gamma = rho(:,:,i);
@@ -31,8 +33,8 @@ Pi = [Gamma(5,5),Gamma(5,6);
 
 % Initialize inflation and output gap dependencies on latent states and
 % lags of inflation/output gap
-deltaL = 1;
-deltaS = 1;
+deltaL = 0.1;
+deltaS = 0.1;
 
 % As Sims may yield unwanted zeros for various windows, perform a check
 % that assigns a uniform random number to the initial estimate if it is
@@ -40,6 +42,8 @@ deltaS = 1;
 e = 1e-4;
 
 Sigma = zeros(2,2);
+
+pit_yt = cov(inflation(window),outputGap(window));
 
 Sigma(1,1) = simsCheck(Omega(5,3),e);
 Sigma(1,2) = simsCheck(Omega(5,4),e);
@@ -50,10 +54,10 @@ R = Sigma*Sigma'; % Covariance matrix of the states
 
 J      = zeros(3,3);
 J(1,1) = std(shortRate(window));
-J(2,2) = simsCheck(Omega(1,1),e);
-J(2,3) = simsCheck(Omega(1,2),e);
-J(3,2) = simsCheck(Omega(3,1),e);
-J(3,3) = simsCheck(Omega(3,2),e);
+J(2,2) = simsCheck(Omega(1,1)*sqrt(pit_yt(1,1)),e);
+J(2,3) = simsCheck(Omega(1,2)*sqrt(pit_yt(1,2)),e);
+J(3,2) = simsCheck(Omega(3,1)*sqrt(pit_yt(2,1)),e);
+J(3,3) = simsCheck(Omega(3,2)*sqrt(pit_yt(2,2)),e);
 
 S = J*J'; % Covariance matrix of the observations
 
@@ -61,8 +65,8 @@ Q = zeros(3,2);
 
 Q(1,1) = deltaL;
 Q(1,2) = deltaS;
-Q(2,1) = simsCheck(Gamma(1,5),e);
-Q(3,2) = simsCheck(Gamma(3,6),e);
+Q(2,1) = coefpi(1);
+Q(3,2) = -coefy(5);
 
 Theta1 = [Gamma(5,1),Gamma(5,3);
           Gamma(6,1),Gamma(6,3)];
@@ -79,13 +83,15 @@ H2 = [0,0;
       0,Gamma(3,4)];
 
 H3 = [0,0,0,0,0,0,0,0,0,0;
-      Gamma(1,9),Gamma(1,10),Gamma(1,11),Gamma(1,12),Gamma(1,13),...
-      Gamma(1,14),Gamma(1,15),Gamma(1,16),Gamma(1,17),Gamma(1,18);
-      Gamma(3,9),Gamma(3,10),Gamma(3,11),Gamma(3,12),Gamma(3,13),...
-      Gamma(3,14),Gamma(3,15),Gamma(3,16),Gamma(3,17),Gamma(3,18)];
+      coefpi(6:end);
+      coefy(6:end)];
   
-z = [de_inflation(window), de_outputGap(window)]'; 
-PCOrtec_window = PCOrtec(window,:)';
+c = [0,0,0]';
+  
+z = [inflation(window), outputGap(window)]';
+
+Ft = PCOrtec(window,:)';
+
 %% Run Kalman filter to evolve the state, build predicted (filtered) states
 clearvars options
 
@@ -97,20 +103,18 @@ options = optimset(options,'TolX',1e-6);
 
 initialEstimates = [Pi(1,1),Pi(1,2),Pi(2,1),Pi(2,2),R(1,1),R(1,2),R(2,1),R(2,2),...
     Q(1,1),Q(1,2),Q(2,1),Q(3,2),S(1,1),S(2,2),S(2,3),S(3,2),S(3,3),...
+    H1(2,1),H1(2,2),H1(3,2),H2(2,1),H2(3,2),c(1),c(2),c(3),...
     Theta1(1,1),Theta1(1,2),Theta1(2,1),Theta1(2,2),...
     Theta2(1,1),Theta2(1,2),Theta2(2,1),Theta2(2,2),...
-    H1(2,1),H1(2,2),H1(3,2),H2(2,1),H2(3,2),H3(2,1),H3(2,2),H3(2,3),...
-    H3(2,4),H3(2,5),H3(2,6),H3(2,7),H3(2,8),H3(2,9),H3(2,10),...
-    H3(3,1),H3(3,2),H3(3,3),H3(3,4),H3(3,5),H3(3,6),H3(3,7),...
-    H3(3,8),H3(3,9),H3(3,10)];
+    H3(2,1),H3(2,2),H3(2,3),H3(2,4),H3(2,5),H3(2,6),H3(2,7),H3(2,8),H3(2,9),H3(2,10),...
+    H3(3,1),H3(3,2),H3(3,3),H3(3,4),H3(3,5),H3(3,6),H3(3,7),H3(3,8),H3(3,9),H3(3,10)];
 
 % Lower and upper bounds on the coefficients 
-lb = [-1,-1,-1,-1,0,-10,-10,0,-10,-10,-10,-10,0,0,-10,-10,0,-1,-1,-1,-1,...
-    -1,-1,-1,-1,-1,-1,-1,-1,-1,-10,-10,-10,-10,-10,-10,-10,-10,-10,-10,...
-    -10,-10,-10,-10,-10,-10,-10,-10,-10,-10];
-ub = [1,1,1,1,10,10,10,10,10,10,10,10,10,10,10,10,10,...
-    1,1,1,1,1,1,1,1,1,1,1,1,1,10,10,10,10,10,10,10,10,10,10,...
-    10,10,10,10,10,10,10,10,10,10];
+lb = [0,-1,-1,0,0,-10,-10,0,-1,-1,-10,-10,0,0,-10,-10,0,0.2,-1,0.2,-1,-1,-10,-10,-10,...
+    -2,-2,-2,-2,-2,-2,-2,-2,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,...
+    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1];
+ub = [1,1,1,1,10,10,10,10,1,1,10,10,10,10,10,10,10,10,1,10,1,1,10,10,10,...
+    2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
 
 % Add restrictions on the covariances of the states and observations
 r = 2;
@@ -124,8 +128,11 @@ Aeq(2,15) = 1;
 Aeq(2,16) = -1;
 
 % Collect all observations into x-vector
-x = [de_shortRate(window), de_inflation(window), de_outputGap(window)]';
+x = [shortRate(window), inflation(window), outputGap(window)]';
 
 % Perform Maximum Likelihood estimation
 [ML_parameters(i,:),ML_LogL(i)] = fmincon('MVNegativeLogLikelihood_plusFt',...
     initialEstimates,[],[],Aeq,beq,lb,ub,[],options,x);
+
+%% Forecasting
+forecastHybridSSM;

@@ -19,7 +19,7 @@ RMSE = zeros(3, k, m);
 %% Model specification 1: Strictly statistical (factor) model
 Y = [inflation outputGap];
 X = PCOrtec;
-var = varm(size(X,2),1); % Autoregressive dynamic of X
+var = varm(size(X,2),2); % Autoregressive dynamic of X
 macroSpec = [0 0; 0 0]; % No autoregressive dynamic of Y
 favar = varm('AR', {macroSpec});
 [forecasts(:,:,:,1), MAE(:,:,1), RMSE(:,:,1)] = ...
