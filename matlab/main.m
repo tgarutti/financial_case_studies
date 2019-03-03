@@ -9,7 +9,7 @@ k = 16;
 w = 80; % Window length of 20 years
 n = length(inflation);
 u = n-w+1; % Number of filters
-q = 53; % Number of parameters for Kalman ML estimation
+q = 56; % Number of parameters for Kalman ML estimation
 Lt = normPCs(:,1);
 St = normPCs(:,2);
 

@@ -1,11 +1,11 @@
 %% Forecast unobserved and observed variables
-global xi Ft
+global xi Ft unemp nair_u
 
 % Set the number of steps ahead one would like to forecast
 forecastHorizon = 16;
 
 % Gather the full data set to evaluate forecasts
-actualX = [shortRate,inflation,outputGap,unemployment,nairu]';
+actualX = [shortRate,inflation,outputGap]';
 
 forecastedXi = zeros(2,forecastHorizon);
 forecastedX  = zeros(3,forecastHorizon);
@@ -15,9 +15,11 @@ forecastErr  = zeros(3,forecastHorizon);
 % Unpack ML parameters
 Pi = zeros(2,2);
 Q  = zeros(3,2);
-H1 = zeros(5,2);
-H2 = zeros(5,2);
-H3 = zeros(5,10);
+H1 = zeros(3,2);
+H2 = zeros(3,2);
+H3 = zeros(3,10);
+H4 = zeros(3,1);
+H5 = zeros(3,1);
 c = zeros(3,1);
 
 Pi(1,1) = ML_parameters(i,1);
@@ -72,18 +74,27 @@ H3(3,8) = ML_parameters(i,51);
 H3(3,9) = ML_parameters(i,52);
 H3(3,10) = ML_parameters(i,53);
 
-H1(3,3) = ML_parameters(i,54);
-H1(3,4) = ML_parameters(i,55);
-H1(4,3) = ML_parameters(i,56);
-H1(5,3) = ML_parameters(i,57);
+H4(2) = ML_parameters(i,54);
+H4(3) = ML_parameters(i,55);
 
-H2(4,3) = ML_parameters(i,58);
-H2(5,3) = ML_parameters(i,59);
+H5(3) = ML_parameters(i,56);
 
 % Construct a VAR(1) model for the window PCs
 varModel = varm(10,1);
 Est = estimate(varModel,Ft');
 PCPhi = Est.AR{1};
+
+% Construct AR(2) model for unemployment and nairu
+varUnemp = varm(1,2);
+Est1 = estimate(varUnemp,unemp);
+f1   = forecast(Est1,forecastHorizon,unemp);
+
+varNairu = varm(1,2);
+Est2 = estimate(varNairu,nair_u);
+f2   = forecast(Est2,forecastHorizon,nair_u);
+
+usedUnemp = [unemp(end),f1(1:end-1)'];
+usedNairu = [nair_u(end),f2(1:end-1)'];
 
 for s=1:forecastHorizon
     % First, forecast the PCs
@@ -100,7 +111,8 @@ for s=1:forecastHorizon
     
     % Third, forecast the macroeconomic variables
     forecastedX(:,s)  = forecastX(forecastedXi(:,s),forecastedX,...
-                            Q,H1,H2,H3,forecastedFt,c,(i+w-1),s,actualX);       
+                            Q,H1,H2,H3,H4,H5,forecastedFt,...
+                            usedUnemp,usedNairu,c,(i+w-1),s,actualX);       
     
     forecastsX(i,:,:) = forecastedX;
     forecastsXi(i,:,:) = forecastedXi;

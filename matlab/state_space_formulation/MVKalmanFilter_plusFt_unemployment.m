@@ -1,23 +1,25 @@
 function [xi,P,predictedxi,predictedP] = MVKalmanFilter_plusFt_unemployment(parameter_vector,y)
 
 % Call global variables
-global z Ft g
+global z Ft unemp nair_u
 
 % Extract length of the data, and the dimensionality of the problem
 T = size(y,2);
-l = size(y,1); % 5 observations, x_t = [i_t pi_t y_t]'
+l = size(y,1); % 3 observations, x_t = [i_t pi_t y_t]'
 d = 2; % 2 states, xi_t = [L_t S_t]'
 
 % Extract the stuff we need from the input arguments
 Pi = zeros(d,d);
 R  = zeros(d,d);
 S  = zeros(l,l);
-Q  = zeros(3,d);
+Q  = zeros(l,d);
 Theta1 = zeros(d,d);
 Theta2 = zeros(d,d);
-H1 = zeros(l,4);
-H2 = zeros(l,4);
-H3 = zeros(l,10);
+H1 = zeros(l,d);
+H2 = zeros(l,d);
+H3 = zeros(3,10);
+H4 = zeros(l,1);
+H5 = zeros(l,1);
 c = zeros(l,1);
 
 Pi(1,1) = parameter_vector(1);
@@ -83,26 +85,10 @@ H3(3,8) = parameter_vector(51);
 H3(3,9) = parameter_vector(52);
 H3(3,10) = parameter_vector(53);
 
-H1(3,3) = parameter_vector(54);
-H1(3,4) = parameter_vector(55);
-H1(4,3) = parameter_vector(56);
-H1(5,3) = parameter_vector(57);
+H4(2) = parameter_vector(54);
+H4(3) = parameter_vector(55);
 
-H2(4,3) = parameter_vector(58);
-H2(5,3) = parameter_vector(59);
-
-S(2,4) = parameter_vector(60);
-S(2,5) = parameter_vector(61);
-S(3,4) = parameter_vector(62);
-S(3,5) = parameter_vector(63);
-S(4,2) = parameter_vector(64);
-S(4,3) = parameter_vector(65);
-S(4,4) = parameter_vector(66);
-S(4,5) = parameter_vector(67);
-S(5,2) = parameter_vector(68);
-S(5,3) = parameter_vector(69);
-S(5,4) = parameter_vector(70);
-S(5,5) = parameter_vector(71);
+H5(3) = parameter_vector(56);
 
 % Diffuse initialisation
 mu0    = zeros(d,1);
@@ -131,7 +117,8 @@ for t=3:T
     
     % Updating step
     xi(:,t)  = predictedxi(:,t)+kalmanGain(:,:,t)*...
-        (y(:,t)-c-Q*predictedxi(:,t)-H1*g(:,t-1)-H2*g(:,t-2)-H3*Ft(:,t));
+        (y(:,t)-c-Q*predictedxi(:,t)-H1*z(:,t-1)-H2*z(:,t-2)-H3*Ft(:,t)-...
+        H4*unemp(t-1)-H5*nair_u(t-1));
     P(:,:,t) = (eye(d)-kalmanGain(:,:,t)*Q)*predictedP(:,:,t);
     % Close the loop over time
 end
