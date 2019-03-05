@@ -28,8 +28,8 @@ Gamma = rho(:,:,i);
 Omega = sigma(:,:,i);
 
 %% Use Sims output and data to create initial matrices
-Pi = [Gamma(5,5),Gamma(5,6);
-      Gamma(6,5),Gamma(6,6)];
+Pi = [Gamma(9,9),Gamma(9,10);
+      Gamma(10,9),Gamma(10,10)];
 
 % Initialize inflation and output gap dependencies on latent states and
 % lags of inflation/output gap
@@ -45,10 +45,10 @@ Sigma = zeros(2,2);
 
 pit_yt = cov(inflation(window),outputGap(window));
 
-Sigma(1,1) = simsCheck(Omega(5,3),e);
-Sigma(1,2) = simsCheck(Omega(5,4),e);
-Sigma(2,1) = simsCheck(Omega(6,3),e);
-Sigma(2,2) = simsCheck(Omega(6,4),e);
+Sigma(1,1) = simsCheck(Omega(9,5),e);
+Sigma(1,2) = simsCheck(Omega(9,6),e);
+Sigma(2,1) = simsCheck(Omega(10,5),e);
+Sigma(2,2) = simsCheck(Omega(10,6),e);
 
 R = Sigma*Sigma'; % Covariance matrix of the states
 
@@ -68,11 +68,11 @@ Q(1,2) = deltaS;
 Q(2,1) = coefpi(1);
 Q(3,2) = -coefy(5);
 
-Theta1 = [Gamma(5,1),Gamma(5,3);
-          Gamma(6,1),Gamma(6,3)];
+Theta1 = [Gamma(9,1),Gamma(9,3);
+          Gamma(10,1),Gamma(10,3)];
 
-Theta2 = [Gamma(5,2),Gamma(5,4);
-          Gamma(6,2),Gamma(6,4)];
+Theta2 = [Gamma(9,2),Gamma(9,4);
+          Gamma(10,2),Gamma(10,4)];
 
 H1 = [0,0;
       Gamma(1,1),Gamma(1,3);
@@ -119,7 +119,7 @@ initialEstimates = [Pi(1,1),Pi(1,2),Pi(2,1),Pi(2,2),R(1,1),R(1,2),R(2,1),R(2,2),
     H4(2),H4(3),H5(3)];
 
 % Lower and upper bounds on the coefficients 
-lb = [0.9,-1,-1,0.6,0,-10,-10,0,-1,-1,-10,-10,0,0,-10,-10,0,0.2,-1,0.2,-1,-1,-10,-10,-10,...
+lb = [-1,-1,-1,-1,0,-10,-10,0,-1,-1,-10,-10,0,0,-10,-10,0,0.2,-1,0.2,-1,-1,-10,-10,-10,...
     -2,-2,-2,-2,-2,-2,-2,-2,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,...
     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1];
 ub = [1,1,1,1,10,10,10,10,1,1,10,10,10,10,10,10,10,10,1,10,1,1,10,10,10,...

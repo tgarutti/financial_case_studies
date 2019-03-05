@@ -39,7 +39,7 @@ residualres = residualres';
 % Regression of inflation
 X_pi = [Lt(window(3):window(end)) inflation(window(2):window(end-1))...
      inflation(window(1):window(end-2)) outputGap(window(2):window(end-1))...
-     PCOrtec(window(3):window(end),:) -unemployment(window(2):window(end-1))];
+     PCOrtec(window(3):window(end),:) unemployment(window(2):window(end-1))];
 Y_pi = inflation(window(3):window(end));
 
 [coefpi, ~, residualpi] = lsqlin(X_pi, Y_pi, [], []);
