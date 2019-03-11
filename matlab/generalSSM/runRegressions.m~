@@ -1,6 +1,6 @@
-function [coefit, coefLt, coefSt, coefpi, coefy, coefnu, coefnustar] = ...
-    runRegressions(window, shortRate, inflation, outputGap, Lt, St,...
-    PCOrtec, unemployment, nairu, restPC, restUnemp, restNairu)
+function [] = runRegressions(window, shortRate, inflation,...
+    outputGap, Lt, St, PCOrtec, unemployment, nairu, restPC, restUnemp, ...
+    restNairu)
 %RUNREGRESSIONS Runs regressions with input vectors restPC and restUnemp,
 %which are restrictions on which variables to include in the regressions.
 
@@ -15,7 +15,7 @@ unemp( :, ~any(unemp,1) ) = [];
 Nairu = restNairu.*nairu;
 Nairu( :, ~any(Nairu,1) ) = [];
 
-if restUnemp == 0 && restNairu == 0
+if restUnemp == 0 & restNairu == 0
     diff = -(unemp - Nairu);
 elseif restUnemp == 0
     diff = nairu;
@@ -99,6 +99,5 @@ Y_nustar = nairu(window(3):window(end-1));
 coefnustar = [coefnustar(1) 1-coefnustar(1) coefnustar(2)/(1-coefnustar(1))...
     coefnustar(3)/(1-coefnustar(1))];
 residualnustar = residualnustar';
-
 end
 
