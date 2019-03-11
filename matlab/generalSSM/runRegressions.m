@@ -1,8 +1,9 @@
 function [coefit, coefLt, coefSt, coefpi, coefy, coefnu, coefnustar] = ...
     runRegressions(window, shortRate, inflation, outputGap, Lt, St,...
     PCOrtec, unemployment, nairu, restPC, restUnemp, restNairu)
-%RUNREGRESSIONS Runs regressions with input vectors restPC and restUnemp,
-%which are restrictions on which variables to include in the regressions.
+%RUNREGRESSIONS Runs regressions with input vectors restPC, restUnemp and
+%restNairu, which are restrictions on which variables to include in the 
+%regressions.
 
 %% Set up restrictions
 PCS = restPC.*(PCOrtec');
