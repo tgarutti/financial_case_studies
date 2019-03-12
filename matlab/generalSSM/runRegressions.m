@@ -1,4 +1,4 @@
-function [coefit, coefLt, coefSt, coefpi, coefy, coefnu, coefnustar] = ...
+function [coefit, coefLt, coefSt, coefpi, coefy, coefnu, coefnustar, coefPCS] = ...
     runRegressions(window, shortRate, inflation, outputGap, Lt, St,...
     PCOrtec, unemployment, nairu, restPC, restUnemp, restNairu)
 %RUNREGRESSIONS Runs regressions with input vectors restPC, restUnemp and
@@ -101,5 +101,13 @@ coefnustar = [coefnustar(1) 1-coefnustar(1) coefnustar(2)/(1-coefnustar(1))...
     coefnustar(3)/(1-coefnustar(1))];
 residualnustar = residualnustar';
 
+%% Regression of PCs
+if sum(restPC) > 0
+    var = varm('AR',{diag(nan(size(PCS,2),1))});
+    [PCFit,~,~,~] = estimate(var, PCS(window,:));
+    coefPCS = diag(PCFit.AR{1,1});
+else
+    coefPCS = [];
+end
 end
 

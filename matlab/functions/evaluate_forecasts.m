@@ -1,4 +1,4 @@
-function [ RMSE, MAE ] = evaluate_forecasts( forecasts, actuals )
+function [ RMSE, MAE, diff ] = evaluate_forecasts( forecasts, actuals )
 %EVALUATE_FORECASTS Evaluates forecasts: RMSE and MAE
 %   Evaluates the forecasts versus the actual values and calculates
 %   RMSE and MAE for each column of forecasts. Column 1 of forecasts

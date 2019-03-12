@@ -56,6 +56,15 @@ favar = varm('AR', {macroSpec});
     forecastDFM( Y, X, favar, var, w, k, true, shortRate);
 clear Y X var macroSpec favar
 
+%% Model specification 5: State-space model benchmark
+SSM;
+
+%% Model specification 6: State-space model benchmark
+SSM1;
+
+%% Model specification 7: State-space model benchmark
+SSM2;
+
 %% Setup for State Space Models
 q = 33; % Number of parameters for Kalman ML estimation
 Lt = normPCs(:,1);
