@@ -1,5 +1,5 @@
 %% Load data
-load_data_temp
+load_data
 
 %% Normalize the principle components of the yield curve data
 normPCs = normalize(PCs);
@@ -46,5 +46,9 @@ end
 coefficients = table(coefficients_shortRate, coefficients_Lt,...
     coefficients_St, coefficients_residuals, coefficients_inflation,...
     coefficients_outputGap);
+
+save('SSM_errors.mat', 'SSM_errors');
+save('SSM_MAE.mat', 'SSM_MAE');
+save('SSM_RMSE.mat', 'SSM_RMSE');
 
 clear_variables
