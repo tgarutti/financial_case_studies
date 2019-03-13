@@ -125,3 +125,4 @@ x = [shortRate(window), inflation(window), outputGap(window)]';
 
 %% Forecasting
 forecastSSM;
+forecastAR;

@@ -147,3 +147,4 @@ x = [shortRate(window), inflation(window), outputGap(window)]';
 
 %% Forecasting
 forecastHybridSSM_unemployment;
+forecastAR;

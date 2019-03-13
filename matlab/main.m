@@ -9,7 +9,7 @@ k = 16;
 w = 80; % Window length of 20 years
 n = length(inflation);
 u = n-w+1; % Number of filters
-q = 53; % Number of parameters for Kalman ML estimation
+q = 33; % Number of parameters for Kalman ML estimation
 Lt = normPCs(:,1);
 St = normPCs(:,2);
 
@@ -17,13 +17,13 @@ St = normPCs(:,2);
 %plots
 
 %% Moving window regressions and Sims algorithm
-initialize_variables_plusFt
+initialize_variables
 
 for i = 1:u
     window = i:(i+w-1);
-    run_regressions_plusFt % Runs regressions with PCs
+    run_regressions % Runs regressions with PCs
     %coefficientsB   % Obtains the B coefficients for the yield curve
-    macroStateSpace_plusFt % Runs the Kalman filter and performs MLE
+    macroStateSpace % Runs the Kalman filter and performs MLE
 end
 
 for s=1:16

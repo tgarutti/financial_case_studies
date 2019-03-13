@@ -49,6 +49,10 @@ Theta2(1,2) = ML_parameters(i,31);
 Theta2(2,1) = ML_parameters(i,32);
 Theta2(2,2) = ML_parameters(i,33);
 
+% Dummy matrices of zeros to give forecastX so no errors occur
+H3 = zeros(3,10);
+forecastFt = zeros(10,forecastHorizon);
+
 for s=1:forecastHorizon
     if s==1
         forecastedXi(:,s) = forecastXi(xi(:,end),forecastedX,...
@@ -58,7 +62,7 @@ for s=1:forecastHorizon
                                 Pi,Theta1,Theta2,(i+w-1),s,actualX);
     end
     forecastedX(:,s)  = forecastX(forecastedXi(:,s),forecastedX,...
-                            Q,H1,H2,[],[],c,(i+w-1),s,actualX);       
+                            Q,H1,H2,H3,forecastFt,c,(i+w-1),s,actualX);       
     
     forecastsX(i,:,:) = forecastedX;
     forecastsXi(i,:,:) = forecastedXi;
