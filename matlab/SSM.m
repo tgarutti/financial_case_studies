@@ -1,5 +1,5 @@
 %% Load data
-load_data
+load_data_temp
 
 %% Normalize the principle components of the yield curve data
 normPCs = normalize(PCs);
@@ -30,16 +30,17 @@ end
 
 SSM_MAE = zeros(3,16);
 SSM_RMSE = zeros(3,16);
+SSM_errors = zeros(u-1, 3, k);
 AR_MAE = zeros(3,16);
 AR_RMSE = zeros(3,16);
 
-for k = 1:16
-    f_w = (w+k):length(inflation);
-    f = forecastsX(1:(end-k),:,k);
-    fAR = forecastsAR(1:(end-k),:,k);
+for j = 1:16
+    f_w = (w+j):length(inflation);
+    f = forecastsX(1:(end-j),:,j);
+    fAR = forecastsAR(1:(end-j),:,j);
     actuals = [shortRate(f_w) inflation(f_w) outputGap(f_w)];
-    [SSM_RMSE(:,k), SSM_MAE(:,k)] = evaluate_forecasts(f, actuals);
-    [AR_RMSE(:,k), AR_MAE(:,k)] = evaluate_forecasts(fAR, actuals);
+    [SSM_RMSE(:,j), SSM_MAE(:,j), SSM_errors(j:end,:,j)] = evaluate_forecasts(f, actuals);
+    [AR_RMSE(:,j), AR_MAE(:,j)] = evaluate_forecasts(fAR, actuals);
 end
 
 coefficients = table(coefficients_shortRate, coefficients_Lt,...

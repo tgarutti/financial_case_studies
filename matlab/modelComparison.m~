@@ -59,21 +59,13 @@ clear Y X var macroSpec favar
 
 %% Model specification 5: State-space model benchmark
 SSM;
-MAE(:,:,5) = SSM_MAE;
-RMSE(:,:,5) = SSM_RMSE;
-errors(:,:,:,5) = SSM_errors;
+
 
 %% Model specification 6: State-space model benchmark
 SSM1;
-MAE(:,:,6) = SSM_MAE;
-RMSE(:,:,6) = SSM_RMSE;
-errors(:,:,:,6) = SSM_errors;
 
 %% Model specification 7: State-space model benchmark
 SSM2;
-MAE(:,:,7) = SSM_MAE;
-RMSE(:,:,7) = SSM_RMSE;
-errors(:,:,:,7) = SSM_errors;
 
 %% Model comparison to benchmark
 copmarisonMAE = zeros(3, k, m);

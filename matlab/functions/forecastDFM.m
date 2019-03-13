@@ -1,4 +1,4 @@
-function [ forecasts, MAE, RMSE ] = forecastDFM( Y, X, favar, var, w, k,...
+function [ forecasts, MAE, RMSE, errors ] = forecastDFM( Y, X, favar, var, w, k,...
     SR, shortRate)
 %FORECASTDFM Forecasts a dynamic factor model specified by favar and var
 %for a given window and forecast horizon.
@@ -58,10 +58,11 @@ forecasts = forecasts(:,1:3,:);
 %% Evaluate forecasts
 RMSE = zeros(3,k);
 MAE = zeros(3,k);
+errors = zeros(u-1, 3, k);
 for i = 1:k
     f_w = (w+i):n;
     f = forecasts(1:(end-i),1:3,i);
     actuals = [shortRate(f_w) Y(f_w,1:2)];
-    [RMSE(:,i), MAE(:,i)] = evaluate_forecasts(f, actuals);
+    [RMSE(:,i), MAE(:,i), errors(i:end,:,i)] = evaluate_forecasts(f, actuals);
 end
 end
