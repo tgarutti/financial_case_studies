@@ -71,3 +71,6 @@ if h > 1
 else
     varD = gamma0;
 end
+
+DM = dMean / sqrt ( (1/T)*varD );  
+end

@@ -30,19 +30,24 @@ end
 
 SSM_MAE = zeros(3,16);
 SSM_RMSE = zeros(3,16);
+SSM_errors = zeros(u-1, 3, k);
 AR_MAE = zeros(3,16);
 AR_RMSE = zeros(3,16);
 
-for k = 1:16
-    f_w = (w+k):length(inflation);
-    f = forecastsX(1:(end-k),:,k);
+for j = 1:16
+    f_w = (w+j):length(inflation);
+    f = forecastsX(1:(end-j),:,j);
     actuals = [shortRate(f_w) inflation(f_w) outputGap(f_w)];
-    [SSM_RMSE(:,k), SSM_MAE(:,k)] = evaluate_forecasts(f, actuals);
-    [AR_RMSE(:,k), AR_MAE(:,k)] = evaluate_forecasts(forecastsAR(1:(end-k),:,k), actuals);
+    [SSM_RMSE(:,j), SSM_MAE(:,j), SSM_errors(j:end,:,j)] = evaluate_forecasts(f, actuals);
+    [AR_RMSE(:,j), AR_MAE(:,j)] = evaluate_forecasts(forecastsAR(1:(end-j),:,j), actuals);
 end
 
 coefficients = table(coefficients_shortRate, coefficients_Lt,...
     coefficients_St, coefficients_residuals, coefficients_inflation,...
     coefficients_outputGap);
+
+save('SSM1_errors.mat', 'SSM_errors');
+save('SSM1_MAE.mat', 'SSM_MAE');
+save('SSM1_RMSE.mat', 'SSM_RMSE');
 
 clear_variables

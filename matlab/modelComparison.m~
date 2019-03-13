@@ -56,68 +56,32 @@ favar = varm('AR', {macroSpec});
 [forecasts(:,:,:,4), MAE(:,:,4), RMSE(:,:,4), errors(:,:,:,4)] = ...
     forecastDFM( Y, X, favar, var, w, k, true, shortRate);
 clear Y X var macroSpec favar
-save('errors.mat', 'errors');
-save('MAE.mat', 'MAE');
-save('RMSE.mat','RMSE');
 
 %% Model specification 5: State-space model benchmark
 SSM;
-load('errors.mat')
-load('MAE.mat')
-load('RMSE.mat')
 load('SSM_errors.mat');
-load('SSM_MAE.mat');
-load('SSM_RMSE.mat');
 MAE(:,:,5) = SSM_MAE;
 RMSE(:,:,5) = SSM_RMSE;
 errors(:,:,:,5) = SSM_errors;
-save('errors.mat', 'errors');
-save('MAE.mat', 'MAE');
-save('RMSE.mat','RMSE');
 
 %% Model specification 6: State-space model benchmark
 SSM1;
-load('errors.mat')
-load('MAE.mat')
-load('RMSE.mat')
 load('SSM1_errors.mat');
-load('SSM1_MAE.mat');
-load('SSM1_RMSE.mat');
 MAE(:,:,6) = SSM_MAE;
 RMSE(:,:,6) = SSM_RMSE;
 errors(:,:,:,6) = SSM_errors;
-save('errors.mat', 'errors');
-save('MAE.mat', 'MAE');
-save('RMSE.mat','RMSE');
 
 %% Model specification 7: State-space model benchmark
 SSM2;
-load('errors.mat')
-load('MAE.mat')
-load('RMSE.mat')
 load('SSM2_errors.mat');
-load('SSM2_MAE.mat');
-load('SSM2_RMSE.mat');
 MAE(:,:,7) = SSM_MAE;
 RMSE(:,:,7) = SSM_RMSE;
 errors(:,:,:,7) = SSM_errors;
 
 %% Model comparison to benchmark
-k = 16; % Forecast horizon
-m = 7; % Number of models
 copmarisonMAE = zeros(3, k, m);
 copmarisonRMSE = zeros(3, k, m);
 for i=1:m
     copmarisonMAE(:,:,i) = MAE(:,:,i)./MAE(:,:,1);
     copmarisonRMSE(:,:,i) = RMSE(:,:,i)./RMSE(:,:,1);
-end
-
-%% Diebold-Mariano test
-DM = zeros(3,k,m);
-for i=2:m
-    for j=1:k
-        for v=1:3
-            DM(v,j,i) = dmtest(errors(:,v,j,1), errors(:,v,j,i), j);
-        end
-    end
 end
